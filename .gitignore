@@ -38,7 +38,10 @@ htmlcov/
 # Node / build
 # ---------------------------------------------------------------------------
 node_modules/
-dist/
+# dist/ is build output, except the validated installable package, which is committed so the single
+# public repository holds both the source and the artifact (built by scripts/build_distribution.py).
+/dist/*
+!/dist/businessops/
 build/
 .next/
 

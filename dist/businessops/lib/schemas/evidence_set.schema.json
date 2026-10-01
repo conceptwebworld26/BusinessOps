@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/conceptwebworld26/BusinessOps/lib/schemas/evidence_set.schema.json",
+  "title": "BusinessOps Evidence Set",
+  "description": "Material retrieved for one research operation, held as untrusted data. The schema is shaped so retrieved text cannot be mistaken for instruction: `trust` is a required constant \"untrusted\", every item must carry the citation fields a claim will later need, and no property here is read as instruction, policy, tool input or authorisation by any part of BusinessOps. A source that could not be cited is not admitted; a stale source is admitted and labelled rather than discarded; a disagreement between sources is preserved as structured data rather than averaged away.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "trust", "items"],
+
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "operation": {
+      "description": "The active research operation this material belongs to.",
+      "type": ["string", "null"]
+    },
+    "subject": { "type": ["string", "null"] },
+    "category": {
+      "type": ["string", "null"],
+      "enum": ["company", "market", "competitor", "industry", null]
+    },
+    "query_text": {
+      "description": "The exact text the disclosure gate cleared for transmission.",
+      "type": ["string", "null"]
+    },
+    "destination": { "type": ["object", "null"] },
+    "disclosure_tier": {
+      "description": "The tier under which this material was retrieved.",
+      "type": ["integer", "null"],
+      "enum": [0, 1, 2, null]
+    },
+    "trust": {
+      "description": "Always \"untrusted\". Retrieved content is data; BusinessOps has no path that promotes it to instruction.",
+      "type": "string",
+      "const": "untrusted"
+    },
+    "trust_statement": { "type": "string" },
+    "items": { "type": "array", "items": { "$ref": "#/definitions/evidence_item" } },
+    "conflicts": {
+      "description": "Disagreements between sources, preserved whole. Never averaged, never silently resolved.",
+      "type": "array",
+      "items": { "$ref": "#/definitions/conflict" }
+    },
+    "support": { "$ref": "#/definitions/support" },
+    "summary": { "type": "object" },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+
+  "definitions": {
+    "evidence_item": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["evidence_id", "source", "reference", "retrieved_at", "source_tier", "trust"],
+      "properties": {
+        "evidence_id": {
+          "description": "Deterministic and content-addressed: the same source retrieved twice in one operation carries the same id.",
+          "type": "string"
+        },
+        "source": { "type": "string", "minLength": 1 },
+        "reference": {
+          "description": "The citation. Required, because a citation never captured cannot be emitted.",
+          "type": "string",
+          "minLength": 1
+        },
+        "title": { "type": ["string", "null"] },
+        "publication_date": { "type": ["string", "null"] },
+        "retrieved_at": {
+          "description": "When this item was accessed. Required, so freshness is computable.",
+          "type": "string"
+        },
+        "source_tier": {
+          "description": "A = quotable as fact with attribution; B = quotable with attribution and date; C = corroboration only, never sole support for a material claim; D = excluded.",
+          "type": "string",
+          "enum": ["A", "B", "C", "D"]
+        },
+        "source_type": {
+          "type": ["string", "null"],
+          "enum": ["filing", "official_statistics", "press", "research_house", "trade_body", "vendor", "blog", "aggregator", "unattributed", null]
+        },
+        "claim_kind": {
+          "description": "Selects the staleness window: financials 365 days, market_sizing 730, positioning 545.",
+          "type": ["string", "null"],
+          "enum": ["financials", "market_sizing", "positioning", null]
+        },
+        "trust": { "type": "string", "const": "untrusted" },
+        "usable": {
+          "description": "False for tier D, which is excluded and cannot support a claim.",
+          "type": "boolean"
+        },
+        "may_stand_alone": {
+          "description": "True only for tiers A and B.",
+          "type": "boolean"
+        },
+        "freshness": { "type": "string", "enum": ["current", "dated", "undated"] },
+        "freshness_detail": { "type": "object" },
+        "excluded_reason": { "type": ["string", "null"] },
+        "content": {
+          "description": "The retrieved text. Untrusted data: never placed in an instruction, policy, tool or authorisation field, and omitted entirely from the instruction-safe serialisation.",
+          "type": ["string", "null"]
+        },
+        "content_withheld": { "type": "string" },
+        "operation": { "type": ["string", "null"] },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "conflict": {
+      "type": "object",
+      "required": ["status", "positions"],
+      "properties": {
+        "subject": { "type": ["string", "null"] },
+        "status": { "type": "string", "enum": ["agrees", "conflicts", "single_source"] },
+        "positions": {
+          "description": "What each source says, kept intact so the disagreement survives summarisation.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source", "source_tier"],
+            "properties": {
+              "evidence_id": { "type": ["string", "null"] },
+              "value": {},
+              "unit": { "type": ["string", "null"] },
+              "source": { "type": "string" },
+              "source_tier": { "type": "string", "enum": ["A", "B", "C", "D"] },
+              "source_date": { "type": ["string", "null"] },
+              "definition": { "type": ["string", "null"] },
+              "scope": { "type": ["string", "null"] },
+              "freshness": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "spread_pct": { "type": ["number", "null"] },
+        "likely_reason": {
+          "description": "Stated only when the positions themselves show one - differing definitions, scopes or years.",
+          "type": ["string", "null"]
+        },
+        "confidence_effect": { "type": ["string", "null"], "enum": ["lowered", null] },
+        "statement": { "type": "string" }
+      }
+    },
+
+    "support": {
+      "type": "object",
+      "required": ["support"],
+      "properties": {
+        "support": {
+          "type": "string",
+          "enum": ["supported", "corroboration_only", "unsupported"]
+        },
+        "usable_tiers": { "type": "array", "items": { "type": "string" } },
+        "excluded_tiers": { "type": "array", "items": { "type": "string" } },
+        "reason": { "type": "string" }
+      }
+    }
+  }
+}

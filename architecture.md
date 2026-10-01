@@ -103,7 +103,7 @@ Verified against Claude Code 2.1.263 (ADR-0001; probe evidence in
 | Component | Mechanism | Discovery |
 |---|---|---|
 | Manifest | `.claude-plugin/plugin.json` | required |
-| Distribution | `.claude-plugin/marketplace.json`; the installable package is built by `scripts/build_distribution.py` | The development repository still loads as a plugin for development (`--plugin-dir .`). Users install a package built from an allowlist, with the plugin root at the package root and no tests, evals, history or developer tooling (ADR-0055) |
+| Distribution | `.claude-plugin/marketplace.json`; the installable package is built by `scripts/build_distribution.py` | The repository loads as a plugin for development (`--plugin-dir .`). Users install the package built from an allowlist into `dist/businessops/`, with its plugin root at the package root and no tests, evals, history or developer tooling (ADR-0055). One public repository, <https://github.com/conceptwebworld26/BusinessOps>, holds both the source and the committed package; a directory submission names the plugin path `dist/businessops` (ADR-0057). The build generates the package's `.gitignore` (Python bytecode only, BOPS-R16) |
 | Commands | `commands/*.md` | auto-discovered |
 | Skills | `skills/<name>/SKILL.md` | auto-discovered |
 | Agents | `agents/*.md` | auto-discovered — **must not** be listed in `plugin.json` |
@@ -1835,8 +1835,9 @@ the engine or isolated in an agent before reaching the main thread.
 | [0052](docs/decisions/ADR-0052-verifier-server-launched-through-the-runtime-resolver.md) | The local verifier MCP server is launched through the runtime resolver (`sh lib/bops_run.sh --verifier`) | Accepted 2026-09-27 — amends 0035 §3 in part (the declared command and arguments only); fixes R-13 |
 | [0053](docs/decisions/ADR-0053-scout-reply-captured-by-the-harness.md) | The scout's reply reaches the engine through a harness capture, never a model copy | Accepted 2026-09-27; amends 0017 and §10 in part (the reply's carrier only) |
 | [0054](docs/decisions/ADR-0054-businessops-product-identity-and-bops-namespace.md) | BusinessOps product identity and the `bops` technical namespace; history is not rewritten | Accepted 2026-09-30 |
-| [0055](docs/decisions/ADR-0055-distribution-package-built-from-an-allowlist.md) | The installable package is built from an allowlist into its own plugin root; the development repository stays complete | Accepted 2026-09-30 |
+| [0055](docs/decisions/ADR-0055-distribution-package-built-from-an-allowlist.md) | The installable package is built from an allowlist into its own plugin root; the development repository stays complete | Accepted 2026-09-30; amended by ADR-0057 |
 | [0056](docs/decisions/ADR-0056-plugin-root-paths-for-shipped-reference-documents.md) | Commands and skills name `reference/` documents by `${CLAUDE_PLUGIN_ROOT}` path; amends ADR-0042's static-guard rule by that one form | Accepted 2026-09-30 |
+| [0057](docs/decisions/ADR-0057-one-public-repository-for-source-and-package.md) | One public repository holds the source and the committed package (`dist/businessops`, submitted as the plugin path); no separate distribution repository | Accepted 2026-10-01 |
 | [0043](docs/decisions/ADR-0043-defect-status-for-verified-product-fixes.md) | Defect register status vocabulary for verified product fixes: `fixed_product` | Accepted 2026-09-20 — amends 0039 in part (§G.1 `status` vocabulary only; 0039 unedited). M13-DEF-04 is its first application |
 
 ---

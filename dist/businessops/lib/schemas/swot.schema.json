@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/conceptwebworld26/BusinessOps/lib/schemas/swot.schema.json",
+  "title": "BusinessOps SWOT",
+  "description": "A four-quadrant SWOT read from a genuine strict SynthesisSet. Every point is a statement already in that set, placed in one quadrant and tagged from its kind: data-supported (internal FACT or CALCULATION), externally-sourced (SOURCED) or analytical-inference (INTERPRETATION with supports in the set). A point carries its statement's own support, confidence, conflicts, materiality, limitations and provenance chain and adds no text. The record is closed: there is no recommendation, score, rank, weight or priority field at any level, and an empty quadrant carries an explicit empty state rather than padding. Conflicts and limitations are the synthesis set's, carried whole.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analysis",
+    "subject",
+    "as_of",
+    "business_model",
+    "currency",
+    "quality_grade",
+    "trust_statement",
+    "placement",
+    "quadrants",
+    "material_not_placed",
+    "conflicts",
+    "limitations",
+    "confidence"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "analysis": {"const": "swot"},
+    "subject": {"type": ["string", "null"]},
+    "as_of": {"type": ["string", "null"]},
+    "business_model": {"type": ["string", "null"]},
+    "currency": {"type": ["string", "null"]},
+    "quality_grade": {"type": ["string", "null"]},
+    "trust_statement": {"type": "string", "minLength": 1},
+    "placement": {"type": "string", "minLength": 1},
+    "quadrants": {
+      "description": "Always four, in the fixed order strengths, weaknesses, opportunities, threats. The order is presentation, not importance.",
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {"$ref": "#/definitions/quadrant"}
+    },
+    "material_not_placed": {
+      "description": "Material statements in the set that no point placed, so an omission is visible rather than silent.",
+      "type": "array",
+      "items": {"type": "string", "pattern": "^sy-[0-9a-f]{12}$"}
+    },
+    "conflicts": {"type": "array", "items": {"type": "object"}},
+    "limitations": {"type": "array", "items": {"$ref": "#/definitions/limitation"}},
+    "confidence": {
+      "type": "object",
+      "required": ["confidence", "reasons"],
+      "properties": {
+        "confidence": {"enum": ["HIGH", "MEDIUM", "LOW"]},
+        "reasons": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  },
+  "definitions": {
+    "quadrant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quadrant", "title", "points", "empty_state"],
+      "properties": {
+        "quadrant": {"enum": ["strengths", "weaknesses", "opportunities", "threats"]},
+        "title": {"enum": ["Strengths", "Weaknesses", "Opportunities", "Threats"]},
+        "points": {"type": "array", "items": {"$ref": "#/definitions/point"}},
+        "empty_state": {
+          "description": "Null when the quadrant holds points; the explicit empty state when it holds none.",
+          "anyOf": [
+            {"type": "null"},
+            {"const": "No supported point identified."}
+          ]
+        }
+      }
+    },
+    "point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "point_id", "quadrant", "tag", "synthesis_id", "statement", "kind",
+        "evidence_class", "origin", "domain", "trust", "support", "confidence",
+        "confidence_reasons", "material", "materiality", "provenance", "chain",
+        "rests_on", "supports", "conflict_refs", "unresolved_dimensions", "limitations",
+        "caveats"
+      ],
+      "properties": {
+        "point_id": {"type": "string", "pattern": "^swot-[0-9a-f]{12}$"},
+        "quadrant": {"enum": ["strengths", "weaknesses", "opportunities", "threats"]},
+        "tag": {"enum": ["data-supported", "externally-sourced", "analytical-inference"]},
+        "synthesis_id": {"type": "string", "pattern": "^sy-[0-9a-f]{12}$"},
+        "statement": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["FACT", "CALCULATION", "SOURCED", "INTERPRETATION"]},
+        "evidence_class": {"type": "integer", "minimum": 1, "maximum": 5},
+        "origin": {"type": "string"},
+        "domain": {"enum": ["internal", "external"]},
+        "trust": {"enum": ["internal", "untrusted"]},
+        "support": {"enum": ["supported", "partially_supported"]},
+        "confidence": {"enum": ["HIGH", "MEDIUM", "LOW"]},
+        "confidence_reasons": {"type": "array", "items": {"type": "string"}},
+        "material": {"type": "boolean"},
+        "materiality": {"type": ["object", "null"]},
+        "provenance": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["kind"],
+            "properties": {"kind": {"type": "string"}}
+          }
+        },
+        "chain": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+        "rests_on": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"enum": ["internal", "external"]}
+        },
+        "supports": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["synthesis_id", "kind", "domain", "origin", "statement"],
+            "properties": {
+              "synthesis_id": {"type": "string", "pattern": "^sy-[0-9a-f]{12}$"},
+              "kind": {"enum": ["FACT", "CALCULATION", "SOURCED", "INTERPRETATION"]},
+              "domain": {"enum": ["internal", "external"]},
+              "origin": {"type": "string"},
+              "statement": {"type": "string"}
+            }
+          }
+        },
+        "conflict_refs": {"type": "array", "items": {"type": "string"}},
+        "unresolved_dimensions": {"type": "object"},
+        "limitations": {"type": "array", "items": {"$ref": "#/definitions/limitation"}},
+        "caveats": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "limitation": {
+      "type": "object",
+      "required": ["code", "reason"],
+      "properties": {
+        "code": {"type": "string"},
+        "subject": {"type": ["string", "null"]},
+        "reason": {"type": ["string", "null"]},
+        "status": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

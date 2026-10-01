@@ -14,14 +14,20 @@ previous build, identified by its `plugin.json` naming `businessops`; anything e
 Transformations, the only ones:
 
 - `.claude-plugin/plugin.json`: `experimental.evals` is removed, because `evals/` is not shipped and a
-  manifest path that does not exist fails validation.
+  manifest path that does not exist fails validation. Every other manifest field, `homepage` and
+  `repository` included, is the source's: BusinessOps has one public repository, which holds both this
+  source and the built package under `dist/businessops/`.
 - Markdown files: a relative link to a file that is not shipped is rewritten to the same file in the
   development repository on GitHub, so documentation links keep working.
 
+One file is generated rather than copied: a `.gitignore` at the package root, so Python bytecode written
+when the plugin runs from that folder is never committed (BOPS-R16). It is repository hygiene only: no
+plugin component reads it.
+
 After building it checks the package and exits non-zero on any failure: a `${CLAUDE_PLUGIN_ROOT}` path
-that does not exist, a forbidden path, a file over 256 KiB, a binary file other than an image, a symlink,
-more than 512 files, a relative Markdown link that does not resolve, or a personal machine path. It
-prints a JSON summary on stdout. Standard library only.
+that does not exist, a forbidden path, Python bytecode, a `.gitignore` other than the generated one, a file
+over 256 KiB, a binary file other than an image, a symlink, more than 512 files, a relative Markdown link
+that does not resolve, or a personal machine path. It prints a JSON summary on stdout. Standard library only.
 """
 
 import argparse
@@ -35,6 +41,14 @@ import sys
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 PLUGIN_NAME = "businessops"
 REPOSITORY_URL = "https://github.com/conceptwebworld26/BusinessOps"
+#: The package's `.gitignore` (BOPS-R16), generated into the package root. Narrow on purpose: it names
+#: Python bytecode only, so it cannot hide a plugin file.
+DISTRIBUTION_GITIGNORE = (
+    "# Distribution-repository hygiene only; no BusinessOps component reads this file.\n"
+    "# Python writes bytecode when the plugin runs from this folder. Never commit it.\n"
+    "__pycache__/\n"
+    "*.py[cod]\n"
+)
 
 #: Directories shipped whole (bytecode excluded).
 SHIPPED_DIRS = ("agents", "commands", "config", "hooks", "lib", "reference", "skills")
@@ -55,8 +69,11 @@ SHIPPED_FILES = (
 )
 #: Paths that must never appear in the package.
 FORBIDDEN = ("tests/", "evals/", "docs/", "dev/", "scripts/", ".claude/", "CLAUDE.md", "architecture.md",
-             "project_plan.md", ".gitignore", "assets/demo-data/generate_demo_data.py",
+             "project_plan.md", "assets/demo-data/generate_demo_data.py",
              "assets/demo-data/northwind_sales.xlsx")
+#: Generated into the package, never copied from the development repository (whose `.gitignore` differs).
+GENERATED_FILES = {".gitignore": DISTRIBUTION_GITIGNORE}
+BYTECODE = re.compile(r"(^|/)__pycache__/|\.py[cod]$")
 
 MAX_FILES = 512
 MAX_FILE_BYTES = 256 * 1024
@@ -147,8 +164,12 @@ def check(out):
         path = os.path.join(out, rel)
         if any(rel == f or rel.startswith(f) for f in FORBIDDEN):
             problems.append("forbidden path: %s" % rel)
+        if BYTECODE.search(rel):
+            problems.append("python bytecode: %s" % rel)
         with io.open(path, "rb") as handle:
             data = handle.read()
+        if rel in GENERATED_FILES and data != GENERATED_FILES[rel].encode("utf-8"):
+            problems.append("not the generated file: %s" % rel)
         image = rel.lower().endswith(IMAGE_EXTENSIONS)
         if len(data) > MAX_FILE_BYTES and not image:
             problems.append("over 256 KiB: %s (%d bytes)" % (rel, len(data)))
@@ -194,6 +215,9 @@ def build(out):
             os.makedirs(os.path.dirname(target))
         with io.open(target, "wb") as handle:
             handle.write(data)
+    for rel, text in GENERATED_FILES.items():
+        with io.open(os.path.join(out, rel), "wb") as handle:
+            handle.write(text.encode("utf-8"))
     problems, files = check(out)
     size = sum(os.path.getsize(os.path.join(out, f)) for f in files)
     return {"package": out, "files": len(files), "bytes": size, "problems": problems}

@@ -1,0 +1,41 @@
+BusinessOps M4 — final package validation (single-repository architecture)
+Captured: 2026-10-01 13:33:14 +0530 on native Windows with Git for Windows; Claude Code 2.1.285 (Claude Code)
+Absolute paths are shown as <repo>. Source: working tree on top of commit b5b762a.
+
+$ python scripts/build_distribution.py
+{
+  "package": "<repo>/dist/businessops",
+  "files": 189,
+  "bytes": 2650014,
+  "problems": []
+}
+
+$ claude plugin validate dist/businessops --strict
+Validating marketplace manifest: <repo>\dist\businessops\.claude-plugin\marketplace.json
+
+✔ Validation passed
+exit status: 0
+
+$ claude plugin validate dist/businessops/.claude-plugin/plugin.json --strict
+Validating plugin manifest: <repo>\dist\businessops\.claude-plugin\plugin.json
+
+✔ Validation passed
+exit status: 0
+
+--- package ---
+files: 189 | bytes: 2650014 | largest: 244323 assets/demo-data/northwind_sales.csv
+top level: .claude-plugin .gitignore .mcp.json agents assets commands config CONNECTORS.md EULA.md hooks lib LICENSE PRIVACY.md README.md reference skills 
+files over 262144 bytes: 0 | binary: 0 | symlinks: 0 | __pycache__: 0 | .py[cod]: 0
+secrets: 0 | personal paths: 0 | BusinessIQ/businessiq: 0 | CLAUDE.md shipped: no
+manifest: homepage=https://github.com/conceptwebworld26/BusinessOps | repository=https://github.com/conceptwebworld26/BusinessOps | marketplace homepage=https://github.com/conceptwebworld26/BusinessOps
+.gitignore: # Distribution-repository hygiene only; no BusinessOps component reads this file.|# Python writes bytecode when the plugin runs from this folder. Never commit it.|__pycache__/|*.py[cod]|
+reference tokens: 113; unresolved ${CLAUDE_PLUGIN_ROOT} paths: 0
+
+--- MCP, against a byte-identical throwaway copy ---
+plugin:businessops:bops-verifier: sh <copy>/lib/bops_run.sh --verifier - ✔ Connected
+initialize         -> {'name': 'bops-verifier', 'version': '1.0.0'}
+tools/list         -> ['recompute'] | annotations {'title': 'Recompute a BusinessOps verification request', 'readOnlyHint': False, 'destructiveHint': False, 'openWorldHint': False}
+recompute (real)   -> isError=False status=completed error_code=None
+unknown request id -> isError=False status=failed error_code=request_not_found
+malformed request  -> isError=False status=failed error_code=request_id_invalid
+unknown tool       -> JSON-RPC error {'code': -32602, 'message': 'invalid params'}

@@ -1,0 +1,135 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/conceptwebworld26/BusinessOps/lib/schemas/kpi_results.schema.json",
+  "title": "BusinessOps KPI Results",
+  "description": "The outcome of a KPI calculation run. Every requested metric appears, including those that could not be produced — a metric is never silently omitted, and never returns null or zero to mean absent.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "results", "counts"],
+
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+
+    "currency": {
+      "description": "The single currency monetary metrics are denominated in.",
+      "type": ["string", "null"]
+    },
+
+    "business_model": { "type": ["string", "null"] },
+
+    "quality_grade": {
+      "type": ["string", "null"],
+      "enum": ["PASS", "WARNING", "CRITICAL", null]
+    },
+
+    "counts": {
+      "description": "How many metrics fell into each bucket.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "available": { "type": "integer", "minimum": 0 },
+        "partial": { "type": "integer", "minimum": 0 },
+        "unavailable": { "type": "integer", "minimum": 0 },
+        "not_applicable": { "type": "integer", "minimum": 0 },
+        "insufficient_data": { "type": "integer", "minimum": 0 }
+      }
+    },
+
+    "results": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/kpi_result" }
+    }
+  },
+
+  "definitions": {
+    "kpi_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kpi_id", "name", "status", "unit", "formula", "classification"],
+      "properties": {
+        "kpi_id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+
+        "status": {
+          "description": "The result bucket. `unavailable` means a required input is absent or unusable; `not_applicable` means the business model makes the metric meaningless; `insufficient_data` means the inputs exist but the history is too short; `partial` means a value was produced from an incomplete pass.",
+          "type": "string",
+          "enum": ["available", "partial", "unavailable", "not_applicable", "insufficient_data"]
+        },
+
+        "value": {
+          "description": "Present only for value-bearing statuses. Decimals are serialised as strings to preserve exact precision.",
+          "type": ["string", "number", "null"]
+        },
+
+        "unit": {
+          "type": "string",
+          "enum": ["currency", "percent", "ratio", "count", "days"]
+        },
+
+        "currency": {
+          "description": "Present for monetary metrics. Never converted.",
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+
+        "category": { "type": "string" },
+
+        "formula": {
+          "description": "The authoritative definition, from the registry.",
+          "type": "string",
+          "minLength": 1
+        },
+
+        "classification": {
+          "description": "Evidence-ledger class. A KPI is always a calculated metric.",
+          "type": "string",
+          "const": "calculated_metric"
+        },
+
+        "inputs": {
+          "description": "The values and columns actually used.",
+          "type": "object"
+        },
+
+        "periods": { "type": ["integer", "null"], "minimum": 0 },
+        "rows_used": { "type": ["integer", "null"], "minimum": 0 },
+
+        "reason": {
+          "description": "Required in spirit for every non-available status: why the metric is absent.",
+          "type": "string"
+        },
+
+        "missing_inputs": {
+          "description": "The specific roles that were absent or unconfirmed.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+
+        "caveats": {
+          "description": "Quality warnings and calculation caveats that travel with the figure.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+
+        "assumptions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "source": { "type": ["string", "null"] },
+            "rows": { "type": ["integer", "null"] },
+            "calculated_at": { "type": "string" },
+            "processing_mode": { "type": "string" },
+            "complete": { "type": "boolean" },
+            "reader_tier": { "type": ["integer", "null"] },
+            "quality_grade": { "type": ["string", "null"] }
+          }
+        }
+      }
+    }
+  }
+}

@@ -5,6 +5,14 @@
 **Status on completion:** REVIEW
 **Supersedes:** None
 
+> **Update, later on 2026-10-01: final architecture decision.** No separate distribution repository will be created.
+> The owner decided that <https://github.com/conceptwebworld26/BusinessOps> is the only repository: it is the
+> reviewable source repository and also holds the validated package, committed under `dist/businessops/`, which a
+> directory submission names as its plugin path (ADR-0057). Where this record speaks of a future separate
+> distribution repository, that plan is superseded by
+> [`2026-10-01-businessops-m4-single-repository-architecture.md`](2026-10-01-businessops-m4-single-repository-architecture.md).
+> The package build, validation results and BOPS-R16 finding below still stand.
+
 ## 1. Prompt / task performed
 
 Prepare and validate the clean installable package that will become the root of a separate BusinessOps distribution

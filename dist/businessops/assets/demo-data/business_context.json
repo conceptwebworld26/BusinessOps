@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "business_name": "Northwind Provisions Ltd",
+    "industry": "retail_consumer",
+    "industry_taxonomy_system": "SIC",
+    "industry_taxonomy_code": "46390",
+    "business_model": "retail",
+    "size_band": "50-199",
+    "products_services": [
+      "Ambient Pallets", "Legacy Crates", "Insulated Totes",
+      "Recycled Wrap", "Chilled Logistics", "Pallet Recovery"
+    ],
+    "product_categories": ["storage", "packaging", "logistics services"],
+    "geographic_markets": ["United Kingdom"]
+  },
+  "reporting": {
+    "fiscal_year_start": "01-01",
+    "currency": "GBP",
+    "number_format": "1,234.56",
+    "date_format": "YYYY-MM-DD",
+    "reporting_period": "monthly"
+  },
+  "analysis": {
+    "materiality": {
+      "absolute_amount": 10000,
+      "percentage": 5.0,
+      "margin_percentage_points": 2.0
+    },
+    "terminology": {
+      "net revenue": "invoiced value after trade discount, before VAT"
+    }
+  }
+}

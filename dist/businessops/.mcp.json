@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "bops-verifier": {
+      "type": "stdio",
+      "command": "sh",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/lib/bops_run.sh", "--verifier"]
+    }
+  }
+}

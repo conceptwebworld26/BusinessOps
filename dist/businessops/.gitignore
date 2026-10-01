@@ -1,0 +1,4 @@
+# Distribution-repository hygiene only; no BusinessOps component reads this file.
+# Python writes bytecode when the plugin runs from this folder. Never commit it.
+__pycache__/
+*.py[cod]

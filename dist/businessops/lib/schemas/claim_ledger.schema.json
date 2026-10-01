@@ -1,0 +1,164 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/conceptwebworld26/BusinessOps/lib/schemas/claim_ledger.schema.json",
+  "title": "BusinessOps Claim Ledger",
+  "description": "Every claim made during one analysis, each carrying exactly one of the seven provenance classes (ADR-0005). The list is closed at seven; adding one requires an ADR. Classes 1-4 are evidential and 5-7 generative, and that split drives presentation - they must render visibly distinct, so summarisation cannot quietly turn an assumption into a fact. Class 3 additionally requires source, citation, date and tier: a claim without captured provenance is not merely discouraged, it cannot be constructed. Class 7 follows ADR-0031's canonical recommendation shape - evidence as synthesis statement ids, non-empty rationale, expected benefit, risks and dependencies, and a confidence level - with no alias or other field, enforced here by the anyOf on each claim. Disclosure decisions are recorded here too, refusals included, because a reviewer needs to see what was not sent as well as what was.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "claims"],
+
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "operation": { "type": ["string", "null"] },
+    "claims": { "type": "array", "items": { "$ref": "#/definitions/claim" } },
+    "disclosure_decisions": {
+      "description": "What the gate decided and what text it cleared. Refusals are recorded: an audit of what left the machine is incomplete without what was stopped.",
+      "type": "array",
+      "items": { "$ref": "#/definitions/disclosure_decision" }
+    },
+    "global_caveats": { "type": "array", "items": { "type": "string" } },
+    "summary": { "type": "object" }
+  },
+
+  "definitions": {
+    "claim": {
+      "type": "object",
+      "required": ["statement", "class"],
+      "properties": {
+        "statement": { "type": "string", "minLength": 1 },
+        "class": {
+          "description": "1 user data · 2 connected system · 3 external sourced · 4 calculated · 5 interpretation · 6 estimate/assumption · 7 recommendation.",
+          "type": "integer",
+          "enum": [1, 2, 3, 4, 5, 6, 7]
+        },
+        "class_name": { "type": "string" },
+        "label": {
+          "type": "string",
+          "enum": ["FACT", "SOURCED", "INTERPRETATION", "ASSUMPTION", "RECOMMENDATION"]
+        },
+        "confidence": {
+          "type": ["string", "null"],
+          "enum": ["HIGH", "MEDIUM", "LOW", null]
+        },
+        "source": {
+          "description": "Required for class 1 and class 3.",
+          "type": ["string", "object", "null"]
+        },
+        "citation": { "description": "Required for class 3.", "type": ["string", "null"] },
+        "source_date": { "description": "Required for class 3.", "type": ["string", "null"] },
+        "source_tier": {
+          "description": "Required for class 3. Tier D is excluded and cannot support a claim, so it is not a permitted value here.",
+          "type": ["string", "null"],
+          "enum": ["A", "B", "C", null]
+        },
+        "freshness": {
+          "description": "A dated claim may be reported; it may not be presented as current.",
+          "type": ["string", "null"],
+          "enum": ["current", "dated", "undated", null]
+        },
+        "formula": { "description": "Required for class 4.", "type": ["string", "null"] },
+        "inputs": { "type": "object" },
+        "based_on": { "type": "array" },
+        "caveats": { "type": "array", "items": { "type": "string" } },
+        "evidence_ids": {
+          "description": "Links this claim to the evidence-set items supporting it.",
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "anyOf": [
+        {
+          "description": "Classes 1-6. Their conditionals are the allOf below.",
+          "properties": { "class": { "enum": [1, 2, 3, 4, 5, 6] } }
+        },
+        {
+          "description": "Class 7, a recommendation, in the canonical ADR-0031 shape: the action is the statement; evidence is distinct synthesis statement ids; rationale and expected benefit are non-empty text; risks and dependencies are non-empty lists; confidence is a level. No alias and no other field is accepted. Shape only: whether each id names a real statement in a genuine synthesis set is decided by the strategy engine at build time, never by this schema.",
+          "required": ["statement", "class", "label", "confidence", "evidence", "rationale",
+                       "expected_benefit", "risks", "dependencies", "based_on"],
+          "additionalProperties": false,
+          "properties": {
+            "statement": { "type": "string", "pattern": "\\S" },
+            "class": { "const": 7 },
+            "class_name": { "const": "recommendation" },
+            "label": { "const": "RECOMMENDATION" },
+            "confidence": { "enum": ["HIGH", "MEDIUM", "LOW"] },
+            "based_on": {
+              "description": "Exactly the evidence ids; text is not provenance for a recommendation.",
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "pattern": "^sy-[0-9a-f]{12}$" }
+            },
+            "caveats": { "type": "array", "items": { "type": "string" } },
+            "evidence": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "pattern": "^sy-[0-9a-f]{12}$" }
+            },
+            "rationale": { "type": "string", "pattern": "\\S" },
+            "expected_benefit": { "type": "string", "pattern": "\\S" },
+            "risks": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "pattern": "\\S" }
+            },
+            "dependencies": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["text", "assumption_id"],
+                "properties": {
+                  "text": { "type": "string", "pattern": "\\S" },
+                  "assumption_id": {
+                    "type": ["string", "null"],
+                    "pattern": "^sy-[0-9a-f]{12}$"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "allOf": [
+        {
+          "if": { "properties": { "class": { "const": 3 } }, "required": ["class"] },
+          "then": { "required": ["source", "citation", "source_date", "source_tier"] }
+        },
+        {
+          "if": { "properties": { "class": { "const": 4 } }, "required": ["class"] },
+          "then": { "required": ["formula"] }
+        },
+        {
+          "if": { "properties": { "class": { "const": 1 } }, "required": ["class"] },
+          "then": { "required": ["source"] }
+        }
+      ]
+    },
+
+    "disclosure_decision": {
+      "type": "object",
+      "required": ["kind", "decision"],
+      "properties": {
+        "kind": { "type": "string", "const": "disclosure_decision" },
+        "decision": {
+          "type": "string",
+          "enum": ["ALLOW", "ALLOW_WITH_APPROVAL", "REFUSE"]
+        },
+        "tier": { "type": ["integer", "null"], "enum": [0, 1, 2, null] },
+        "requested_tier": { "type": ["integer", "null"] },
+        "authorised": { "type": "boolean" },
+        "transmitted_text": {
+          "description": "Null unless the disclosure was actually authorised - a proposed query that was refused was never transmitted.",
+          "type": ["string", "null"]
+        },
+        "proposed_text": { "type": ["string", "null"] },
+        "destination": { "type": ["object", "null"] },
+        "operation": { "type": ["string", "null"] },
+        "reasons": { "type": "array", "items": { "type": "string" } },
+        "failed_checks": { "type": "array", "items": { "type": "string" } },
+        "alternative_offered": { "type": "boolean" }
+      }
+    }
+  }
+}

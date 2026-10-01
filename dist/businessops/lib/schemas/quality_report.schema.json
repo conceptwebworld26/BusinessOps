@@ -1,0 +1,189 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/conceptwebworld26/BusinessOps/lib/schemas/quality_report.schema.json",
+  "title": "BusinessOps Quality Report",
+  "description": "The structured verdict of the data quality gate: overall grade, per-family results and individual findings, each with evidence, the threshold that applied, and remediation guidance. Deterministic for a given dataset and configuration.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "grade", "halted", "rows_checked", "findings"],
+
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+
+    "grade": {
+      "description": "Overall verdict: the highest finding severity present, INFO-only counting as PASS.",
+      "type": "string",
+      "enum": ["PASS", "WARNING", "CRITICAL"]
+    },
+
+    "halted": {
+      "description": "Whether the quality gate stopped the pipeline. True exactly when grade is CRITICAL.",
+      "type": "boolean"
+    },
+
+    "halt_reason": {
+      "type": "string",
+      "description": "Present only when halted; names every critical problem."
+    },
+
+    "completeness": {
+      "description": "Whether checks could examine the whole dataset. A sampled or streamed pass is never reported as exhaustive.",
+      "type": "string",
+      "enum": ["exhaustive", "partial", "not_run"]
+    },
+
+    "processing_mode": {
+      "type": "string",
+      "enum": ["full", "streamed", "sampled", "aggregated"]
+    },
+
+    "rows_checked": { "type": "integer", "minimum": 0 },
+    "columns_checked": { "type": "integer", "minimum": 0 },
+
+    "families_total": { "type": "integer", "minimum": 0 },
+    "families_run": { "type": "integer", "minimum": 0 },
+
+    "families_skipped": {
+      "description": "Families that could not run, keyed by check id, with the reason.",
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+
+    "finding_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "INFO": { "type": "integer", "minimum": 0 },
+        "WARNING": { "type": "integer", "minimum": 0 },
+        "CRITICAL": { "type": "integer", "minimum": 0 }
+      }
+    },
+
+    "source": {
+      "description": "Dataset identity and how it was read. Carries no business values.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_name": { "type": ["string", "null"] },
+        "source_type": { "type": ["string", "null"] },
+        "sheet": { "type": ["string", "null"] },
+        "rows": { "type": ["integer", "null"] },
+        "columns": { "type": ["integer", "null"] },
+        "reader_tier": { "type": ["integer", "null"] },
+        "reader_name": { "type": ["string", "null"] },
+        "processing_mode": { "type": ["string", "null"] },
+        "rows_examined": { "type": ["integer", "null"] },
+        "complete": { "type": ["boolean", "null"] },
+        "currencies": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "checks": {
+      "description": "One entry per quality family, including families that found nothing.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check_id", "grade"],
+        "properties": {
+          "check_id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string" },
+          "grade": { "type": "string", "enum": ["PASS", "WARNING", "CRITICAL"] },
+          "completeness": {
+            "type": "string",
+            "enum": ["exhaustive", "partial", "not_run"]
+          },
+          "skipped_reason": { "type": ["string", "null"] },
+          "examined": { "type": ["integer", "null"], "minimum": 0 },
+          "can_halt": { "type": "boolean" },
+          "findings": { "type": "array", "items": { "$ref": "#/definitions/finding" } }
+        }
+      }
+    },
+
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/finding" }
+    },
+
+    "caveats": {
+      "description": "Warnings that must travel with every downstream figure.",
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+
+  "definitions": {
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["check_id", "code", "severity", "message", "halts"],
+      "properties": {
+        "check_id": {
+          "description": "Machine-readable family identifier.",
+          "type": "string",
+          "minLength": 1
+        },
+        "family": {
+          "description": "Legacy grouping label retained for continuity with earlier reports.",
+          "type": "string"
+        },
+        "code": {
+          "description": "Machine-readable identifier for this specific condition.",
+          "type": "string",
+          "minLength": 1
+        },
+        "severity": { "type": "string", "enum": ["INFO", "WARNING", "CRITICAL"] },
+        "message": {
+          "description": "Human-readable explanation of what was found and why it matters.",
+          "type": "string",
+          "minLength": 1
+        },
+        "detail": { "type": ["string", "null"] },
+        "affected": {
+          "description": "Number of rows or values affected.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "fields": {
+          "description": "Column names the finding concerns. Names only, never values.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "halts": {
+          "description": "Whether this finding stops the pipeline.",
+          "type": "boolean"
+        },
+        "completeness": {
+          "type": "string",
+          "enum": ["exhaustive", "partial", "not_run"]
+        },
+        "observed": {
+          "description": "The measured value compared against the threshold.",
+          "type": ["number", "string", "integer", "null"]
+        },
+        "threshold": {
+          "description": "The configured limit that applied, and which configuration layer supplied it.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "key": { "type": "string" },
+            "value": { "type": ["number", "integer", "string"] },
+            "source": { "type": "string" }
+          }
+        },
+        "evidence": {
+          "description": "Supporting facts. Values from fields classified above derived_safe are redacted rather than shown.",
+          "type": "object"
+        },
+        "remediation": {
+          "description": "What the user can do. BusinessOps reports remediation; it never performs it.",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

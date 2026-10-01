@@ -1,0 +1,466 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/conceptwebworld26/BusinessOps/lib/schemas/profile.schema.json",
+  "title": "BusinessOps Data Profile",
+  "description": "The deterministic structural profile of 1-20 local files (ADR-0036). Produced only by data_profile.build(); no caller supplies a count, kind, class, role, grade, status or identifier. Every fact carries its basis (observed, calculated or inferred), the one operation that produced it and how many values it rests on. No cell value appears except ISO currency codes and the date bounds of date columns not classed restricted or never. There is no confidence, score, rank, priority, recommendation, evidence class, decision, approval, lifecycle or timestamp. A profile is diagnostic metadata, never evidence, and synthesis refuses it. This schema checks shape; that the profile still describes its sources is enforced by the engine, which refuses to serialise a stale profile.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analysis",
+    "profile_id",
+    "status",
+    "presentation",
+    "config_digest",
+    "limits",
+    "request",
+    "context_used",
+    "sources",
+    "datasets",
+    "relationships",
+    "limitations",
+    "trust_statement",
+    "use_statement"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "analysis": {"const": "data_profile"},
+    "profile_id": {
+      "description": "Content-addressed over schema version, limits, request, presentation, configuration digest, context used and each source's name, digest, profiled sheets and reader tiers.",
+      "type": "string",
+      "pattern": "^dpr-[0-9a-f]{12}$"
+    },
+    "status": {"enum": ["complete", "complete_with_limitations", "partial", "unavailable"]},
+    "presentation": {"enum": ["local", "shareable"]},
+    "config_digest": {"$ref": "#/definitions/sha256"},
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_sources", "distinct_cap", "kind_sample", "sensitivity_sample"],
+      "properties": {
+        "max_sources": {"const": 20},
+        "distinct_cap": {"type": "integer", "minimum": 1},
+        "kind_sample": {"type": "integer", "minimum": 1},
+        "sensitivity_sample": {"type": "integer", "minimum": 1}
+      }
+    },
+    "request": {
+      "description": "The closed request as accepted, with each source shown by its ref.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sources", "presentation"],
+      "properties": {
+        "sources": {
+          "type": "array", "minItems": 1, "maxItems": 20,
+          "items": {"$ref": "#/definitions/source_ref"}
+        },
+        "sheets": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array", "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          }
+        },
+        "objective": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "command_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+            "kpi_ids": {
+              "type": "array", "minItems": 1,
+              "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}
+            }
+          }
+        },
+        "presentation": {"enum": ["local", "shareable"]}
+      }
+    },
+    "context_used": {
+      "description": "Business Context the existing engines used, labelled as context. Never a data fact.",
+      "anyOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["basis", "business_model", "currency"],
+          "properties": {
+            "basis": {"const": "context"},
+            "business_model": {"type": ["string", "null"]},
+            "currency": {"type": ["string", "null"]}
+          }
+        }
+      ]
+    },
+    "sources": {
+      "type": "array", "minItems": 1, "maxItems": 20,
+      "items": {"$ref": "#/definitions/source"}
+    },
+    "datasets": {"type": "array", "items": {"$ref": "#/definitions/dataset"}},
+    "relationships": {"type": "array", "items": {"$ref": "#/definitions/relationship"}},
+    "limitations": {"type": "array", "items": {"$ref": "#/definitions/limitation"}},
+    "trust_statement": {"type": "string", "minLength": 1},
+    "use_statement": {"type": "string", "minLength": 1}
+  },
+  "definitions": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "source_ref": {"type": "string", "pattern": "^src-[0-9a-f]{12}$"},
+    "dataset_ref": {"type": "string", "pattern": "^dst-[0-9a-f]{12}$"},
+    "column_ref": {"type": "string", "pattern": "^col-[0-9a-f]{12}$"},
+    "subject_ref": {"type": "string", "pattern": "^(src|dst|col)-[0-9a-f]{12}$"},
+    "count": {
+      "description": "Exact in local presentation; below the k-anonymity floor banded in shareable presentation.",
+      "anyOf": [
+        {"type": "integer", "minimum": 0},
+        {"enum": ["1-9", "10-49", "50-199", "200-499", "500-999", "1000-4999", "5000+"]}
+      ]
+    },
+    "rate": {"type": "string", "pattern": "^[01]\\.[0-9]{4}$"},
+    "reason_code": {
+      "anyOf": [
+        {"type": "null"},
+        {"enum": ["encrypted", "unreadable", "malformed", "unsupported_encoding", "empty_file",
+                  "no_columns", "reader_refused", "changed_during_profile"]}
+      ]
+    },
+    "operation": {"type": "string", "pattern": "^[a-z_]+(\\.[a-z_]+)+$"},
+    "observed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "basis", "operation", "examined"],
+      "properties": {
+        "value": {},
+        "basis": {"const": "observed"},
+        "operation": {"$ref": "#/definitions/operation"},
+        "examined": {"type": "null"}
+      }
+    },
+    "count_fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "basis", "operation", "examined"],
+      "properties": {
+        "value": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/count"}]},
+        "basis": {"const": "calculated"},
+        "operation": {"$ref": "#/definitions/operation"},
+        "examined": {"$ref": "#/definitions/count"}
+      }
+    },
+    "rate_fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "basis", "operation", "examined"],
+      "properties": {
+        "value": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/rate"}]},
+        "basis": {"const": "calculated"},
+        "operation": {"$ref": "#/definitions/operation"},
+        "examined": {"$ref": "#/definitions/count"}
+      }
+    },
+    "inferred": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "basis", "operation", "examined"],
+      "properties": {
+        "value": {},
+        "basis": {"const": "inferred"},
+        "operation": {"$ref": "#/definitions/operation"},
+        "examined": {"$ref": "#/definitions/count"}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_ref", "source_name", "source_path", "source_type", "size_bytes",
+                   "source_sha256", "status", "reason_code", "guidance", "workbook"],
+      "properties": {
+        "source_ref": {"$ref": "#/definitions/source_ref"},
+        "source_name": {"type": "string", "minLength": 1},
+        "source_path": {
+          "description": "The absolute path in local presentation; null in shareable presentation.",
+          "type": ["string", "null"]
+        },
+        "source_type": {"enum": ["csv", "tsv", "txt", "xlsx", "xlsm"]},
+        "size_bytes": {"type": ["integer", "null"], "minimum": 0},
+        "source_sha256": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/sha256"}]},
+        "status": {"enum": ["profiled", "unavailable"]},
+        "reason_code": {"$ref": "#/definitions/reason_code"},
+        "guidance": {"enum": [null, "csv_export"]},
+        "workbook": {
+          "anyOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["basis", "operation", "sheets", "encrypted", "macro_enabled",
+                           "external_link_count", "shared_formula_count", "date_system"],
+              "properties": {
+                "basis": {"const": "observed"},
+                "operation": {"const": "workbook.inspect"},
+                "sheets": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["name", "visibility"],
+                    "properties": {
+                      "name": {"type": "string"},
+                      "visibility": {"enum": ["visible", "hidden", "very_hidden"]}
+                    }
+                  }
+                },
+                "encrypted": {"type": "boolean"},
+                "macro_enabled": {"type": "boolean"},
+                "external_link_count": {"type": "integer", "minimum": 0},
+                "shared_formula_count": {"type": "integer", "minimum": 0},
+                "date_system": {"enum": ["1900", "1904"]}
+              }
+            }
+          ]
+        }
+      }
+    },
+    "dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset_ref", "source_ref", "sheet", "reader_tier", "status", "reason_code",
+                   "row_count", "column_count", "processing_mode", "rows_examined", "complete",
+                   "warning_codes", "duplicate_headers", "columns", "key_candidates", "quality",
+                   "applicability"],
+      "oneOf": [
+        {
+          "description": "Profiled: every structural fact present, no reason code.",
+          "properties": {
+            "status": {"const": "profiled"},
+            "reason_code": {"type": "null"},
+            "row_count": {"$ref": "#/definitions/observed"},
+            "quality": {"type": "object"}
+          }
+        },
+        {
+          "description": "Unavailable: a closed reason code and no facts.",
+          "properties": {
+            "status": {"const": "unavailable"},
+            "reason_code": {"type": "string"},
+            "row_count": {"type": "null"},
+            "columns": {"type": "array", "maxItems": 0},
+            "key_candidates": {"type": "array", "maxItems": 0},
+            "quality": {"type": "null"},
+            "applicability": {"type": "null"}
+          }
+        }
+      ],
+      "properties": {
+        "dataset_ref": {"$ref": "#/definitions/dataset_ref"},
+        "source_ref": {"$ref": "#/definitions/source_ref"},
+        "sheet": {"type": ["string", "null"]},
+        "reader_tier": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/observed"}]},
+        "status": {"enum": ["profiled", "unavailable"]},
+        "reason_code": {"$ref": "#/definitions/reason_code"},
+        "row_count": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/observed"}]},
+        "column_count": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/observed"}]},
+        "processing_mode": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/observed"}]},
+        "rows_examined": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/observed"}]},
+        "complete": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/observed"}]},
+        "warning_codes": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/observed"}]},
+        "duplicate_headers": {
+          "anyOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["value", "basis", "operation", "examined"],
+              "properties": {
+                "value": {"type": "array", "items": {"type": "integer", "minimum": 1}},
+                "basis": {"const": "calculated"},
+                "operation": {"$ref": "#/definitions/operation"},
+                "examined": {"type": "integer", "minimum": 0}
+              }
+            }
+          ]
+        },
+        "columns": {"type": "array", "items": {"$ref": "#/definitions/column"}},
+        "key_candidates": {"type": "array", "items": {"$ref": "#/definitions/key_candidate"}},
+        "quality": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/quality"}]},
+        "applicability": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/applicability"}]}
+      }
+    },
+    "column": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["column_ref", "position", "original_name", "normalized_name", "facts"],
+      "properties": {
+        "column_ref": {"$ref": "#/definitions/column_ref"},
+        "position": {"type": "integer", "minimum": 1},
+        "original_name": {"type": "string"},
+        "normalized_name": {"type": "string"},
+        "facts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["non_null_count", "empty_count", "distinct_count", "distinct_at_least",
+                       "uniqueness_rate", "date_coverage", "kind", "kind_counts", "mixed_types",
+                       "ambiguous_count", "currencies", "day_first", "sensitivity", "role"],
+          "properties": {
+            "non_null_count": {"$ref": "#/definitions/count_fact"},
+            "empty_count": {"$ref": "#/definitions/count_fact"},
+            "distinct_count": {"$ref": "#/definitions/count_fact"},
+            "distinct_at_least": {"$ref": "#/definitions/count_fact"},
+            "uniqueness_rate": {"$ref": "#/definitions/rate_fact"},
+            "date_coverage": {
+              "description": "Present only for date columns not classed restricted or never.",
+              "anyOf": [
+                {"type": "null"},
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["value", "basis", "operation", "examined"],
+                  "properties": {
+                    "value": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["first", "last", "period_count"],
+                      "properties": {
+                        "first": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+                        "last": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+                        "period_count": {"type": "integer", "minimum": 1}
+                      }
+                    },
+                    "basis": {"const": "calculated"},
+                    "operation": {"$ref": "#/definitions/operation"},
+                    "examined": {"$ref": "#/definitions/count"}
+                  }
+                }
+              ]
+            },
+            "kind": {"$ref": "#/definitions/inferred"},
+            "kind_counts": {"$ref": "#/definitions/inferred"},
+            "mixed_types": {"$ref": "#/definitions/inferred"},
+            "ambiguous_count": {"$ref": "#/definitions/inferred"},
+            "currencies": {
+              "description": "ISO currency codes; withheld (null) for restricted and never columns.",
+              "anyOf": [{"type": "null"}, {"$ref": "#/definitions/inferred"}]
+            },
+            "day_first": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/inferred"}]},
+            "sensitivity": {"$ref": "#/definitions/inferred"},
+            "role": {
+              "description": "Withheld (null) for restricted and never columns.",
+              "anyOf": [{"type": "null"}, {"$ref": "#/definitions/inferred"}]
+            }
+          }
+        }
+      }
+    },
+    "key_candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["column_ref", "rule", "basis", "status"],
+      "properties": {
+        "column_ref": {"$ref": "#/definitions/column_ref"},
+        "rule": {"enum": ["unique_non_null", "mapped_role"]},
+        "basis": {"const": "calculated"},
+        "status": {"const": "candidate"}
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["left", "right", "overlap_rate", "basis", "status"],
+      "properties": {
+        "left": {"$ref": "#/definitions/column_ref"},
+        "right": {"$ref": "#/definitions/column_ref"},
+        "overlap_rate": {"$ref": "#/definitions/rate"},
+        "basis": {"const": "calculated"},
+        "status": {"const": "candidate"}
+      }
+    },
+    "quality": {
+      "description": "A reference to M4's report. No message, detail, evidence, threshold, observation or remediation.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grade", "halted", "completeness", "findings"],
+      "properties": {
+        "grade": {"enum": ["PASS", "WARNING", "CRITICAL"]},
+        "halted": {"type": "boolean"},
+        "completeness": {"enum": ["exhaustive", "partial", "not_run"]},
+        "findings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["check_id", "family", "code", "severity", "affected", "fields",
+                         "completeness"],
+            "properties": {
+              "check_id": {"type": "string", "minLength": 1},
+              "family": {"type": "string", "minLength": 1},
+              "code": {"type": "string", "minLength": 1},
+              "severity": {"enum": ["INFO", "WARNING", "CRITICAL"]},
+              "affected": {"$ref": "#/definitions/count"},
+              "fields": {"type": "array", "items": {"$ref": "#/definitions/column_ref"}},
+              "completeness": {"enum": ["exhaustive", "partial", "not_run"]}
+            }
+          }
+        }
+      }
+    },
+    "applicability": {
+      "description": "What the KPI engine and the command registry decide: statuses and declared needs, never a value or an outcome.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command", "kpis"],
+      "properties": {
+        "command": {
+          "anyOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["command_id", "required_roles"],
+              "properties": {
+                "command_id": {"type": "string", "minLength": 1},
+                "required_roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["role", "status"],
+                    "properties": {
+                      "role": {"type": "string", "minLength": 1},
+                      "status": {"enum": ["auto", "confirm_required", "absent"]}
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "kpis": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kpi_id", "status", "inputs", "minimum_periods"],
+            "properties": {
+              "kpi_id": {"type": "string", "minLength": 1},
+              "status": {"enum": ["available", "partial", "unavailable", "not_applicable",
+                                  "insufficient_data"]},
+              "inputs": {"type": "array", "items": {"type": "string"}},
+              "minimum_periods": {"type": "integer", "minimum": 0}
+            }
+          }
+        }
+      }
+    },
+    "limitation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "subject_ref", "reason"],
+      "properties": {
+        "code": {"enum": ["sampled_inference", "distinct_count_capped", "hidden_sheet_not_profiled",
+                          "macro_enabled_not_executed", "external_links_not_followed",
+                          "degraded_reader_tier", "mixed_types", "no_rows", "no_date_column",
+                          "inconsistent_headers_across_sheets"]},
+        "subject_ref": {"$ref": "#/definitions/subject_ref"},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

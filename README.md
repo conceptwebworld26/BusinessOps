@@ -485,9 +485,3 @@ processes your conversation under your agreement with Anthropic. Details are in 
 
 Proprietary. Copyright (c) 2026 Prakash Meghani - Concept Web World. All rights reserved. You may install and use
 BusinessOps under the [End User License Agreement](EULA.md); see [`LICENSE`](LICENSE).
-
-## Project lineage
-
-BusinessOps is derived from the codebase of an earlier product, BusinessIQ, and is developed as a separate product.
-Historical development records and decision records under `docs/development/` and `docs/decisions/` describe that
-earlier work under its original name and identifiers (`businessiq`, `biq`), and are kept unchanged as history.

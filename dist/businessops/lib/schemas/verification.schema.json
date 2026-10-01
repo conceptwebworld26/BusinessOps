@@ -1,0 +1,275 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/conceptwebworld26/BusinessOps/lib/schemas/verification.schema.json",
+  "title": "BusinessOps Verification Result",
+  "description": "The deterministic record of one M11 verification of a draft executive report or decision package (ADR-0034, amended by ADR-0035). Produced only by verification.verify(); no caller supplies a status, check, finding, lifecycle, confidence, trust or value. Every finding blocks finalisation; there is no severity, warning tier, confidence, trust grade, score, rank or timestamp. A finding names what it checked (expected: a reference) and how it compared (observed: a closed comparison code) and never carries a figure or statement text. This schema checks shape; that the result belongs to one draft object and still describes it is enforced by the verification engine, which is authoritative.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analysis",
+    "verified_by",
+    "verification_id",
+    "subject",
+    "status",
+    "finalisation_permitted",
+    "synthesis_digest",
+    "components",
+    "recomputation",
+    "checks",
+    "findings",
+    "verification_note",
+    "human_decision",
+    "trust_statement"
+  ],
+  "oneOf": [
+    {"description": "Passed: no finding, finalisation permitted.", "properties": {"status": {"const": "passed"}, "finalisation_permitted": {"const": true}, "findings": {"type": "array", "maxItems": 0}}},
+    {"description": "Failed: at least one finding, finalisation refused.", "properties": {"status": {"const": "failed"}, "finalisation_permitted": {"const": false}, "findings": {"type": "array", "minItems": 1}}}
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "analysis": {"const": "verification"},
+    "verified_by": {"const": "bops-analysis-verifier"},
+    "verification_id": {
+      "description": "Content-addressed over subject, checks and findings. Same inputs, same id.",
+      "type": "string",
+      "pattern": "^ver-[0-9a-f]{12}$"
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "report_id", "digest"],
+      "properties": {
+        "kind": {"enum": ["executive_report", "decision_package"]},
+        "report_id": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^rpt-[0-9a-f]{12}$"}]},
+        "digest": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/sha256"}]}
+      }
+    },
+    "status": {"enum": ["passed", "failed"]},
+    "finalisation_permitted": {"type": "boolean"},
+    "synthesis_digest": {"$ref": "#/definitions/sha256"},
+    "components": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "swot", "decision_packages"],
+      "properties": {
+        "strategy": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/digest_record"}]},
+        "swot": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/digest_record"}]},
+        "decision_packages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["digest", "lifecycle", "verification_id"],
+            "properties": {
+              "digest": {"$ref": "#/definitions/sha256"},
+              "lifecycle": {"enum": ["draft", "final"]},
+              "verification_id": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^ver-[0-9a-f]{12}$"}]}
+            }
+          }
+        }
+      }
+    },
+    "recomputation": {
+      "description": "Statuses, ids and counts only. Never a figure, a path or a hash of a value.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "executor", "request_id", "record_id", "runs", "figures_checked"],
+      "properties": {
+        "status": {"enum": ["completed", "not_required", "failed"]},
+        "executor": {"const": "bops-analysis-verifier"},
+        "request_id": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^rcq-[0-9a-f]{16}$"}]},
+        "record_id": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^rcr-[0-9a-f]{16}$"}]},
+        "runs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["run_id", "dataset_id", "command_id", "source_status", "config_status", "run_status"],
+            "properties": {
+              "run_id": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^run-[0-9a-f]{12}$"}]},
+              "dataset_id": {"type": ["string", "null"]},
+              "command_id": {"type": ["string", "null"]},
+              "source_status": {"enum": ["matched", "mismatched", "unreadable"]},
+              "config_status": {"enum": ["matched", "mismatched", "not_checked"]},
+              "run_status": {"enum": ["completed", "unavailable", "not_run"]}
+            }
+          }
+        },
+        "figures_checked": {"type": "integer", "minimum": 0}
+      }
+    },
+    "checks": {
+      "description": "Every catalogue check, in catalogue order, with its outcome.",
+      "type": "array",
+      "minItems": 46,
+      "maxItems": 46,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check_id", "category", "method", "outcome"],
+        "properties": {
+          "check_id": {"$ref": "#/definitions/check_id"},
+          "category": {"$ref": "#/definitions/category"},
+          "method": {"$ref": "#/definitions/method"},
+          "outcome": {"enum": ["passed", "failed", "not_applicable", "not_run"]}
+        }
+      }
+    },
+    "findings": {
+      "description": "Every finding blocks finalisation. Ordered by check catalogue, section, component position and location - never by importance.",
+      "type": "array",
+      "items": {"$ref": "#/definitions/finding"}
+    },
+    "verification_note": {"type": "string", "minLength": 1},
+    "human_decision": {"type": "string", "minLength": 1},
+    "trust_statement": {"type": "string", "minLength": 1}
+  },
+  "definitions": {
+    "protocol_envelope": {
+      "description": "bops.verifier.result/1 - the only thing the recompute operation returns, and the only thing a model relays (ADR-0035 section 3). No value, count, hash, path or message.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocol", "request_id", "status", "record_id", "error_code"],
+      "properties": {
+        "protocol": {"const": "bops.verifier.result/1"},
+        "request_id": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^rcq-[0-9a-f]{16}$"}]},
+        "status": {"enum": ["completed", "failed"]},
+        "record_id": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^rcr-[0-9a-f]{16}$"}]},
+        "error_code": {"anyOf": [{"type": "null"}, {"enum": ["request_id_invalid", "request_not_found", "request_invalid", "request_digest_mismatch", "record_conflict", "execution_error"]}]}
+      }
+    },
+    "protocol_request": {
+      "description": "bops.verifier.request/1 - the sealed request under ./.businessops/verification/requests/, read only by the recompute operation (ADR-0035 section 4). Ids, a local path, hashes and run arguments; never a claimed value or statement text.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocol", "request_id", "runs"],
+      "properties": {
+        "protocol": {"const": "bops.verifier.request/1"},
+        "request_id": {"type": "string", "pattern": "^rcq-[0-9a-f]{16}$"},
+        "runs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["run_id", "command_id", "source_path", "source_sha256", "run_arguments", "config_digest", "items"],
+            "properties": {
+              "run_id": {"type": "string", "pattern": "^run-[0-9a-f]{12}$"},
+              "command_id": {"type": "string", "minLength": 1},
+              "source_path": {"type": "string", "minLength": 1},
+              "source_sha256": {"$ref": "#/definitions/sha256"},
+              "run_arguments": {"type": "object"},
+              "config_digest": {"$ref": "#/definitions/sha256"},
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["kind", "id", "fields"],
+                  "properties": {
+                    "kind": {"enum": ["kpi", "analysis"]},
+                    "id": {"type": "string", "minLength": 1},
+                    "fields": {"type": "array", "minItems": 1, "items": {"enum": ["status", "value", "currency", "unit", "statement", "observed", "comparison", "change", "change_pct", "period", "materiality"]}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "protocol_record": {
+      "description": "bops.verifier.record/1 - written only by the recompute operation and read only by verify() (ADR-0035 section 5). Statuses and salted SHA-256 digests; never a value.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocol", "record_id", "request_id", "request_sha256", "runs"],
+      "properties": {
+        "protocol": {"const": "bops.verifier.record/1"},
+        "record_id": {"type": "string", "pattern": "^rcr-[0-9a-f]{16}$"},
+        "request_id": {"type": "string", "pattern": "^rcq-[0-9a-f]{16}$"},
+        "request_sha256": {"$ref": "#/definitions/sha256"},
+        "runs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["run_id", "source_status", "config_status", "run_status", "items"],
+            "properties": {
+              "run_id": {"type": "string"},
+              "source_status": {"enum": ["matched", "mismatched", "unreadable"]},
+              "config_status": {"enum": ["matched", "mismatched", "not_checked"]},
+              "run_status": {"enum": ["completed", "unavailable", "not_run"]},
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["kind", "id", "status", "digests"],
+                  "properties": {
+                    "kind": {"enum": ["kpi", "analysis"]},
+                    "id": {"type": "string"},
+                    "status": {"enum": ["found", "absent"]},
+                    "digests": {"type": "object", "additionalProperties": {"$ref": "#/definitions/sha256"}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "digest_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["digest"],
+      "properties": {"digest": {"anyOf": [{"type": "null"}, {"$ref": "#/definitions/sha256"}]}}
+    },
+    "category": {"enum": ["input_integrity", "binding_integrity", "synthesis_integrity", "reproduction_integrity", "figure_recomputation", "section_integrity", "content_preservation", "provenance_integrity", "lifecycle_integrity", "boundary_integrity", "schema_integrity"]},
+    "method": {"enum": ["source_binding", "reproduction", "textual_equality", "recomputation"]},
+    "check_id": {"enum": [
+      "input.genuine_draft",
+      "binding.synthesis", "binding.strategy", "binding.decision_packages", "binding.swot", "binding.sources_record",
+      "synthesis.genuine_strict", "synthesis.quality_grade", "synthesis.statement_ids", "synthesis.registry_agreement",
+      "reproduction.swot", "reproduction.strategy", "reproduction.decision_package", "reproduction.report",
+      "recomputation.request", "recomputation.relay", "recomputation.record", "recomputation.source", "recomputation.configuration", "recomputation.execution", "recomputation.coverage", "recomputation.kpi", "recomputation.statement",
+      "section.set", "section.order", "section.status", "section.availability",
+      "content.statements", "content.summary", "content.kpi", "content.anomalies", "content.strategy", "content.swot", "content.decision_packages", "content.evidence_and_uncertainty",
+      "provenance.evidence_kinds", "provenance.owned_content", "provenance.framing", "provenance.external_trust", "provenance.outlook",
+      "lifecycle.draft_input", "lifecycle.packages_final",
+      "boundary.fixed_text", "boundary.forbidden_fields",
+      "schema.subject", "schema.components"
+    ]},
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["finding_id", "check_id", "category", "method", "component", "location", "expected", "observed", "message"],
+      "properties": {
+        "finding_id": {"type": "string", "pattern": "^vf-[0-9a-f]{12}$"},
+        "check_id": {"$ref": "#/definitions/check_id"},
+        "category": {"$ref": "#/definitions/category"},
+        "method": {"$ref": "#/definitions/method"},
+        "component": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "ref"],
+          "properties": {
+            "kind": {"enum": ["report", "package", "executive_report", "decision_package", "synthesis_set", "strategy_result", "swot", "statement", "kpi", "section", "framing", "relay", "record", "run", "item"]},
+            "ref": {"type": ["string", "null"]}
+          }
+        },
+        "location": {"type": ["string", "null"], "pattern": "^(/[^/]*)*$"},
+        "expected": {
+          "description": "A reference to what was checked: a check-specific key such as binding:strategy_digest or run:<run_id>/kpi:<id>/value. Never a figure or statement text.",
+          "type": "string",
+          "pattern": "^[a-z_]+:",
+          "maxLength": 400
+        },
+        "observed": {"enum": ["differs", "absent", "extra", "mismatched", "unreadable", "not_run", "malformed", "unbound", "refused", "duplicate", "not_final", "unexpected", "invalid", "unavailable", "request_id_invalid", "request_not_found", "request_invalid", "request_digest_mismatch", "record_conflict", "execution_error"]},
+        "message": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

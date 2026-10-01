@@ -1,0 +1,103 @@
+{
+  "$comment": "Controlled vocabulary for Business Context (ADR-0011). Adding an entry is a registration-only extension (architecture.md section 18) and needs no ADR. Never guess a value that is not listed — ask the user.",
+  "schema_version": "1.0.0",
+
+  "business_model": {
+    "$comment": "Drives KPI relevance. kpi_hints are advisory for Milestone 5's registry; the authoritative applicable_models field lives with each KPI.",
+    "values": {
+      "saas": {
+        "label": "SaaS / subscription software",
+        "kpi_hints": ["mrr", "arr", "net_revenue_retention", "gross_churn_rate", "customer_lifetime_value", "customer_acquisition_cost", "burn_rate", "runway"],
+        "irrelevant_hints": ["inventory_turnover", "same_store_sales", "sell_through_rate"]
+      },
+      "retail": {
+        "label": "Retail / e-commerce",
+        "kpi_hints": ["average_order_value", "inventory_turnover", "same_store_sales", "sell_through_rate", "gross_margin", "conversion_rate"],
+        "irrelevant_hints": ["billable_utilisation", "realisation_rate", "net_revenue_retention"]
+      },
+      "professional_services": {
+        "label": "Professional services / consulting",
+        "kpi_hints": ["billable_utilisation", "billable_hours", "realisation_rate", "project_margin", "average_bill_rate", "days_sales_outstanding"],
+        "irrelevant_hints": ["inventory_turnover", "same_store_sales", "sell_through_rate"]
+      },
+      "manufacturing": {
+        "label": "Manufacturing",
+        "kpi_hints": ["gross_margin", "inventory_turnover", "cost_of_goods_sold", "capacity_utilisation", "days_payable_outstanding"],
+        "irrelevant_hints": ["billable_utilisation", "net_revenue_retention"]
+      },
+      "marketplace": {
+        "label": "Marketplace / platform",
+        "kpi_hints": ["gross_merchandise_value", "take_rate", "average_order_value", "conversion_rate", "customer_acquisition_cost"],
+        "irrelevant_hints": ["inventory_turnover", "billable_utilisation"]
+      },
+      "wholesale_distribution": {
+        "label": "Wholesale / distribution",
+        "kpi_hints": ["gross_margin", "inventory_turnover", "days_sales_outstanding", "days_payable_outstanding", "average_order_value"],
+        "irrelevant_hints": ["billable_utilisation", "net_revenue_retention"]
+      },
+      "agency": {
+        "label": "Agency / creative services",
+        "kpi_hints": ["billable_utilisation", "project_margin", "retainer_revenue", "average_bill_rate"],
+        "irrelevant_hints": ["inventory_turnover", "same_store_sales"]
+      },
+      "hospitality": {
+        "label": "Hospitality / food service",
+        "kpi_hints": ["average_transaction_value", "same_store_sales", "gross_margin", "cost_of_goods_sold"],
+        "irrelevant_hints": ["net_revenue_retention", "billable_utilisation"]
+      },
+      "nonprofit": {
+        "label": "Non-profit",
+        "kpi_hints": ["programme_expense_ratio", "donor_retention", "cost_per_beneficiary", "runway"],
+        "irrelevant_hints": ["gross_margin", "inventory_turnover", "net_revenue_retention"]
+      },
+      "other": {
+        "label": "Other / not listed",
+        "kpi_hints": [],
+        "irrelevant_hints": []
+      }
+    }
+  },
+
+  "industry": {
+    "$comment": "Coarse sectors. taxonomy_code carries a finer external code (e.g. SIC/NAICS) when the user supplies one.",
+    "values": [
+      "software_technology",
+      "financial_services",
+      "healthcare",
+      "retail_consumer",
+      "manufacturing_industrial",
+      "professional_services",
+      "media_entertainment",
+      "real_estate_construction",
+      "transport_logistics",
+      "energy_utilities",
+      "education",
+      "hospitality_travel",
+      "agriculture",
+      "public_sector",
+      "nonprofit",
+      "other"
+    ]
+  },
+
+  "size_band": {
+    "$comment": "Bands, never exact headcount — exact figures fail the Tier 1 banding rule (ADR-0009).",
+    "values": ["1-9", "10-49", "50-199", "200-499", "500-999", "1000-4999", "5000+"]
+  },
+
+  "reporting_period": {
+    "values": ["monthly", "quarterly", "half_yearly", "annual"]
+  },
+
+  "number_format": {
+    "values": ["1,234.56", "1.234,56", "1 234,56", "1234.56"]
+  },
+
+  "date_format": {
+    "values": ["YYYY-MM-DD", "DD/MM/YYYY", "MM/DD/YYYY", "DD-MMM-YYYY"]
+  },
+
+  "taxonomy_system": {
+    "values": ["SIC", "NAICS", "NACE", "ANZSIC", "other"]
+  }
+}

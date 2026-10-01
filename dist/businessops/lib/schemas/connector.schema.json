@@ -1,0 +1,294 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/conceptwebworld26/BusinessOps/lib/schemas/connector.schema.json",
+  "title": "BusinessOps Connector Catalogue",
+  "description": "The outcome of one value-free connector discovery request (ADR-0037 sections C.4-C.6 and H; ADR-0038). Produced only by connectors.catalogue; no caller supplies a status, entry, outcome or identifier. Entries are structural metadata only - object types, property names, data types, required flags and relationships - relayed by a model, unverified, and never evidence. No record value, sample, option or picklist value, count, identity, email, secret, vendor error text, confidence, score, rank, recommendation, evidence class or authorization field exists anywhere in it: there is no connected, authorized, verified, available, approved or granted value. The definitions also fix the shape of a capability resolution, a sealed discovery brief, a registry declaration and a Connector Gate record.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analysis",
+    "catalogue_id",
+    "connector_id",
+    "capability_placeholder",
+    "status",
+    "reason_code",
+    "message",
+    "object_types",
+    "entries",
+    "conflicts",
+    "limitations",
+    "dropped_keys",
+    "file_fallback",
+    "trust_statement",
+    "use_statement"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "analysis": {"const": "connector_catalogue"},
+    "catalogue_id": {
+      "description": "Content-addressed over the connector identity, the capability placeholder, the requested object types and the normalised entries; excludes the operation and any time. Null when no entry was produced.",
+      "oneOf": [{"type": "null"}, {"type": "string", "pattern": "^cat-[0-9a-f]{12}$"}]
+    },
+    "connector_id": {"oneOf": [{"type": "null"}, {"$ref": "#/definitions/connector_id"}]},
+    "capability_placeholder": {"oneOf": [{"type": "null"}, {"$ref": "#/definitions/placeholder"}]},
+    "status": {"enum": ["complete", "complete_with_limitations", "partial", "unavailable"]},
+    "reason_code": {"oneOf": [{"type": "null"}, {"$ref": "#/definitions/failure_code"}]},
+    "message": {"type": ["string", "null"], "maxLength": 600},
+    "object_types": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["object_type", "status"],
+        "properties": {
+          "object_type": {"$ref": "#/definitions/identifier"},
+          "status": {"enum": ["described", "unavailable"]}
+        }
+      }
+    },
+    "entries": {"type": "array", "items": {"$ref": "#/definitions/entry"}},
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "object", "property", "related_object", "variants"],
+        "properties": {
+          "kind": {"enum": ["object", "property", "relationship"]},
+          "object": {"$ref": "#/definitions/identifier"},
+          "property": {"oneOf": [{"type": "null"}, {"$ref": "#/definitions/identifier"}]},
+          "related_object": {"oneOf": [{"type": "null"}, {"$ref": "#/definitions/identifier"}]},
+          "variants": {"type": "integer", "minimum": 2}
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "subject"],
+        "properties": {
+          "code": {"$ref": "#/definitions/failure_code"},
+          "subject": {"type": ["string", "null"], "maxLength": 64}
+        }
+      }
+    },
+    "dropped_keys": {
+      "description": "Reply keys dropped by the allowlist parser: the key name only, never its value. A malformed or value-shaped key name is recorded as <unnamed>.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "reason"],
+        "properties": {
+          "key": {"type": "string", "pattern": "^([A-Za-z_][A-Za-z0-9_]{0,63}|<unnamed>)$"},
+          "reason": {"enum": ["authority", "privacy_restricted", "not_allowlisted", "length_bound", "out_of_scope"]}
+        }
+      }
+    },
+    "file_fallback": {"type": "string", "minLength": 1, "maxLength": 400},
+    "trust_statement": {"const": "Connector-reported structure, relayed by a model, unverified. It is not evidence and it authorizes nothing."},
+    "use_statement": {"const": "This describes what a connected system structurally holds - object types, properties, data types, required flags and relationships. It carries no record, value, count, option or identity, it computes nothing, and it never enters analysis, synthesis or verification."}
+  },
+  "definitions": {
+    "identifier": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"},
+    "connector_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$"},
+    "placeholder": {"enum": ["~~accounting", "~~crm", "~~commerce", "~~warehouse", "~~spreadsheet", "~~chat"]},
+    "eligible_placeholder": {"enum": ["~~accounting", "~~crm", "~~commerce", "~~warehouse", "~~spreadsheet"]},
+    "failure_code": {
+      "enum": [
+        "connector_not_configured", "ambiguous_connector", "capability_unsupported",
+        "binding_mismatch", "connector_unavailable", "connector_not_authorized",
+        "authentication_failure", "authorization_failure", "timeout", "tool_failure",
+        "malformed_response", "operation_unknown", "stale_metadata", "metadata_conflict",
+        "external_content_unavailable", "privacy_restricted", "insufficient_data",
+        "request_invalid", "blocked_prerequisite"
+      ]
+    },
+    "tool_name": {"type": "string", "pattern": "^mcp__[A-Za-z0-9_-]{1,120}__[A-Za-z0-9_-]{1,64}$"},
+    "namespace": {"type": "string", "pattern": "^mcp__[A-Za-z0-9_-]{1,120}$"},
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "object", "property", "related_object", "label", "data_type", "required", "basis"],
+      "properties": {
+        "kind": {"enum": ["object", "property", "relationship"]},
+        "object": {"$ref": "#/definitions/identifier"},
+        "property": {"oneOf": [{"type": "null"}, {"$ref": "#/definitions/identifier"}]},
+        "related_object": {"oneOf": [{"type": "null"}, {"$ref": "#/definitions/identifier"}]},
+        "label": {"type": ["string", "null"], "minLength": 1, "maxLength": 128},
+        "data_type": {"oneOf": [{"type": "null"}, {"enum": ["string", "number", "integer", "boolean", "date", "datetime", "enumeration", "reference", "unknown"]}]},
+        "required": {"type": ["boolean", "null"]},
+        "basis": {"const": "relayed"}
+      }
+    },
+    "resolution": {
+      "description": "Deterministic capability resolution (ADR-0037 section C.2). configured means registered and declared; it asserts nothing about measurement, grant, reachability, connection or authorization.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "analysis", "capability_placeholder", "status", "connectors", "absence"],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "analysis": {"const": "connector_resolution"},
+        "capability_placeholder": {"$ref": "#/definitions/placeholder"},
+        "status": {"enum": ["not_configured", "configured", "ambiguous"]},
+        "connectors": {"type": "array", "items": {"$ref": "#/definitions/connector_id"}},
+        "absence": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["code", "text", "file_fallback"],
+              "properties": {
+                "code": {"const": "connector_not_configured"},
+                "text": {"type": "string", "minLength": 1},
+                "file_fallback": {"type": "string", "minLength": 1}
+              }
+            }
+          ]
+        }
+      }
+    },
+    "arguments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "source", "value"],
+        "properties": {
+          "name": {"$ref": "#/definitions/identifier"},
+          "source": {"enum": ["object_type", "page_size", "cursor"]},
+          "value": {"type": ["integer", "null"], "minimum": 1, "maximum": 1000}
+        }
+      }
+    },
+    "output_fields": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "object": {"type": "array", "items": {"enum": ["kind", "object", "label"]}},
+        "property": {"type": "array", "items": {"enum": ["kind", "object", "property", "label", "data_type", "required"]}},
+        "relationship": {"type": "array", "items": {"enum": ["kind", "object", "related_object", "label"]}}
+      }
+    },
+    "transport": {
+      "description": "Server identity exactly as .mcp.json declares it. No headers, environment, token or credential field exists.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "url"],
+          "properties": {"type": {"const": "http"}, "url": {"type": "string", "pattern": "^https://[^@?#]+$"}}
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "command", "args"],
+          "properties": {"type": {"const": "stdio"}, "command": {"type": "string", "minLength": 1}, "args": {"type": "array", "items": {"type": "string"}}}
+        }
+      ]
+    },
+    "brief": {
+      "description": "One sealed, consumed-once discovery brief. The only input the connector agent receives.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocol", "operation", "connector_id", "capability_placeholder", "server_key", "tool_name", "object_types", "calls", "cursor_argument", "max_calls", "max_entries", "record_token", "end_token"],
+      "properties": {
+        "protocol": {"const": "bops.connector.brief/1"},
+        "operation": {"type": "string", "pattern": "^cop-[0-9a-f]{24}$"},
+        "connector_id": {"$ref": "#/definitions/connector_id"},
+        "capability_placeholder": {"$ref": "#/definitions/eligible_placeholder"},
+        "server_key": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$"},
+        "tool_name": {"$ref": "#/definitions/tool_name"},
+        "object_types": {"type": "array", "minItems": 1, "items": {"$ref": "#/definitions/identifier"}},
+        "calls": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["arguments"],
+            "properties": {"arguments": {"type": "object"}}
+          }
+        },
+        "cursor_argument": {"oneOf": [{"type": "null"}, {"$ref": "#/definitions/identifier"}]},
+        "max_calls": {"type": "integer", "minimum": 1, "maximum": 50},
+        "max_entries": {"type": "integer", "minimum": 1, "maximum": 5000},
+        "record_token": {"const": "BOPS-CAT/1"},
+        "end_token": {"const": "BOPS-CAT-END/1"}
+      }
+    },
+    "declaration": {
+      "description": "One registry declaration (ADR-0037 section C.1). No enabled flag, authorization, scope, token, header, priority or trust field exists.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["connector_id", "capability_placeholder", "display_name", "server_key", "transport", "file_fallback", "capabilities"],
+      "properties": {
+        "connector_id": {"$ref": "#/definitions/connector_id"},
+        "capability_placeholder": {"$ref": "#/definitions/eligible_placeholder"},
+        "display_name": {"type": "string", "minLength": 1, "maxLength": 64},
+        "server_key": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$"},
+        "transport": {"$ref": "#/definitions/transport"},
+        "file_fallback": {"type": "string", "minLength": 1, "maxLength": 400},
+        "capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["capability_id", "interaction_class", "namespace", "tool_name", "gate_record", "object_types", "arguments", "output_fields", "max_calls", "max_entries"],
+            "properties": {
+              "capability_id": {"$ref": "#/definitions/identifier"},
+              "interaction_class": {"const": "discovery"},
+              "namespace": {"$ref": "#/definitions/namespace"},
+              "tool_name": {"$ref": "#/definitions/tool_name"},
+              "gate_record": {"type": "string", "pattern": "^docs/development/\\d{4}-\\d{2}-\\d{2}-[a-z0-9-]+\\.md$"},
+              "object_types": {"type": "array", "minItems": 1, "items": {"$ref": "#/definitions/identifier"}},
+              "arguments": {"$ref": "#/definitions/arguments"},
+              "output_fields": {"$ref": "#/definitions/output_fields"},
+              "max_calls": {"type": "integer", "minimum": 1, "maximum": 50},
+              "max_entries": {"type": "integer", "minimum": 1, "maximum": 5000}
+            }
+          }
+        }
+      }
+    },
+    "gate_record": {
+      "description": "The one machine-readable block of an owner-approved Connector Gate development record: every ADR-0037 section B.1 item 7 binding, measured on synthetic data.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocol", "connector_id", "capability_placeholder", "server_key", "transport", "namespace", "tool_name", "interaction_class", "classification_reasons", "object_types", "arguments", "output_fields", "server_instructions", "value_free_property", "measured_on", "platform_version", "owner_acceptance"],
+      "properties": {
+        "protocol": {"const": "bops.connector.gate/1"},
+        "connector_id": {"$ref": "#/definitions/connector_id"},
+        "capability_placeholder": {"$ref": "#/definitions/eligible_placeholder"},
+        "server_key": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$"},
+        "transport": {"$ref": "#/definitions/transport"},
+        "namespace": {"$ref": "#/definitions/namespace"},
+        "tool_name": {"$ref": "#/definitions/tool_name"},
+        "interaction_class": {"enum": ["discovery", "read", "write", "administrative"]},
+        "classification_reasons": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "object_types": {"type": "array", "minItems": 1, "items": {"$ref": "#/definitions/identifier"}},
+        "arguments": {"$ref": "#/definitions/arguments"},
+        "output_fields": {"$ref": "#/definitions/output_fields"},
+        "server_instructions": {"type": ["string", "null"]},
+        "value_free_property": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["demonstrated", "synthetic_data", "method"],
+          "properties": {
+            "demonstrated": {"type": "boolean"},
+            "synthetic_data": {"type": "boolean"},
+            "method": {"type": "string", "minLength": 1}
+          }
+        },
+        "measured_on": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+        "platform_version": {"type": "string", "minLength": 1},
+        "owner_acceptance": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"}
+      }
+    }
+  }
+}
