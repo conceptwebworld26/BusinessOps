@@ -1,0 +1,65 @@
+BusinessOps — distribution package validation (distribution-repository preparation)
+Captured: 2026-10-01 13:09:15 +0530 on native Windows with Git for Windows; Claude Code 2.1.285 (Claude Code)
+Source: development repository commit 58a91b4a1d178f922944ddd37f4b2332c09a40ae (clean working tree). Absolute paths are shown as <repo>.
+
+$ python scripts/build_distribution.py
+{
+  "package": "<repo>/dist/businessops",
+  "files": 188,
+  "bytes": 2650190,
+  "problems": []
+}
+
+Compared with the approved M4A.1 package: 0 files added, 0 removed, 0 changed (SHA-256 per file).
+
+$ claude plugin validate dist/businessops --strict
+Validating marketplace manifest: <repo>\dist\businessops\.claude-plugin\marketplace.json
+
+✔ Validation passed
+exit status: 0
+
+$ claude plugin validate dist/businessops/.claude-plugin/plugin.json --strict
+Validating plugin manifest: <repo>\dist\businessops\.claude-plugin\plugin.json
+
+✔ Validation passed
+exit status: 0
+
+--- MCP, run against a byte-identical copy of the package (so the package itself gets no Python bytecode) ---
+$ claude --plugin-dir <copy> mcp list   (plugin line)
+plugin:businessops:bops-verifier: sh <copy>/lib/bops_run.sh --verifier - ✔ Connected
+A sealed verification request (synthetic test-fixture data) was issued into a working folder; request id: rcq-ac17c5497c1fbbfd
+initialize                       -> {'name': 'bops-verifier', 'version': '1.0.0'} | capabilities {'tools': {}} | instructions absent
+tools/list                       -> ['recompute'] | annotations {'title': 'Recompute a BusinessOps verification request', 'readOnlyHint': False, 'destructiveHint': False, 'openWorldHint': False}
+tools/call (real sealed request) -> isError=False status=completed error_code=None record=present
+tools/call (unknown id)          -> isError=False status=failed error_code=request_not_found record=None
+tools/call (malformed id)        -> isError=False status=failed error_code=request_id_invalid record=None
+tools/call (extra argument)      -> isError=False status=failed error_code=request_id_invalid record=None
+tools/call (unknown tool)        -> JSON-RPC error {'code': -32602, 'message': 'invalid params'}
+
+Records written by the server: 1
+Production .mcp.json unchanged since: 2026-09-30 14:05 (byte-identical in the package: yes)
+
+--- package inventory ---
+files: 188 | bytes: 2650190 | top level: .claude-plugin .mcp.json agents assets commands config CONNECTORS.md EULA.md hooks lib LICENSE PRIVACY.md README.md reference skills 
+files over 262144 bytes: 0 | binary files: 0 | symlinks: 0 | bytecode: 0 | OS junk files: 0
+largest: 244323 assets/demo-data/northwind_sales.csv
+absent: tests/ evals/ evals/results/ .claude/ docs/ docs/development/ docs/decisions/ dev/ scripts/ .git/ CLAUDE.md architecture.md project_plan.md .gitignore northwind_sales.xlsx generate_demo_data.py
+credentials/keys/tokens/connection strings: 0 | personal machine paths: 0 | emails: hello@conceptwebworld.com reuters.com@evil.example 
+${CLAUDE_PLUGIN_ROOT}/reference/ tokens: 113, all resolving; relative reference mentions: 0; CLAUDE.md in instruction/policy/manifest files: 0
+README: 4105 words outside code blocks; 15 example prompts; 9 links into the development repository, all present in origin/main
+
+--- package test modules (python tests/run_tests.py <module>) ---
+  unit.test_distribution_build ran 9 | failures 0 | errors 0 | skipped 0
+  unit.test_shipped_claude_md_references ran 8 | failures 0 | errors 0 | skipped 0
+  unit.test_manifest ran 15 | failures 0 | errors 0 | skipped 0
+  unit.test_m11_verification_server ran 13 | failures 0 | errors 0 | skipped 0
+  unit.test_m11_verifier_agent_boundary ran 12 | failures 0 | errors 0 | skipped 7
+  unit.test_m13_def04_static_guard ran 17 | failures 0 | errors 0 | skipped 0
+  unit.test_m13_def08_runtime_resolver ran 26 | failures 0 | errors 0 | skipped 0
+  negative.test_m13_approval_boundaries ran 5 | failures 0 | errors 0 | skipped 0
+  unit.test_m12b_connector_registry ran 51 | failures 0 | errors 0 | skipped 0
+  negative.test_m12b_connector_security ran 78 | failures 0 | errors 0 | skipped 0
+  unit.test_command_registry ran 41 | failures 0 | errors 0 | skipped 0
+  unit.test_m13_def24_write_classifier ran 49 | failures 6 | errors 1 | skipped 0
+  unit.test_m13_eval_results ran 56 | failures 0 | errors 0 | skipped 0
+  The 7 failures/errors in unit.test_m13_def24_write_classifier are the known native-Windows baseline failures (BOPS-R13 and related); none is new.

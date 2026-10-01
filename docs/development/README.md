@@ -142,3 +142,4 @@ Template: [`../templates/dev-record.md`](../templates/dev-record.md).
 | 2026-09-30 | BusinessOps M3.1: installed-package runtime verification | [businessops m3 1 installed package verification](2026-09-30-businessops-m3-1-installed-package-verification.md) |
 | 2026-09-30 | BusinessOps M4A: final hardening before the first Git commit | [businessops m4a final hardening](2026-09-30-businessops-m4a-final-hardening.md) |
 | 2026-09-30 | BusinessOps M4A.1: remove shipped-plugin CLAUDE.md references (BOPS-R14; work done 2026-10-01) | [businessops m4a1 remove shipped claude md references](2026-09-30-businessops-m4a1-remove-shipped-claude-md-references.md) |
+| 2026-10-01 | BusinessOps M4: distribution repository preparation (package built and validated) | [businessops distribution repository preparation](2026-10-01-businessops-distribution-repository-preparation.md) |
