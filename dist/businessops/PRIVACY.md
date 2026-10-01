@@ -1,8 +1,8 @@
 # BusinessOps Privacy Policy
 
-**Provider:** Prakash Meghani - Concept Web World
-**Contact:** hello@conceptwebworld.com
-**Applies to:** BusinessOps 0.1.0 · last updated 2026-09-30
+**Provider:** Prakash Meghani - Krayons Global
+**Contact:** krayonsglobal@gmail.com
+**Applies to:** BusinessOps 0.1.0 · last updated 2026-10-01
 
 BusinessOps is a plugin that runs inside Anthropic's Claude applications. This policy describes what the
 BusinessOps software itself does with data. It was written from the plugin's source code, which you can
@@ -93,4 +93,4 @@ BusinessOps is a business tool and is not intended for people under 18.
 ## 8. Changes and contact
 
 This policy may change with new versions of BusinessOps; the version included with a release applies to
-that release. Questions or concerns about privacy: hello@conceptwebworld.com
+that release. Questions or concerns about privacy: krayonsglobal@gmail.com

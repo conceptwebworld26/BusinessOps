@@ -1,11 +1,11 @@
 # BusinessOps End User License Agreement
 
-**Licensor:** Prakash Meghani - Concept Web World
+**Licensor:** Prakash Meghani - Krayons Global
 **Software:** BusinessOps, a plugin for Anthropic's Claude applications
-**Contact:** hello@conceptwebworld.com
+**Contact:** krayonsglobal@gmail.com
 **Version:** 0.1.0 · 2026-09-30
 
-This End User License Agreement (the "Agreement") is between you and Prakash Meghani - Concept Web World
+This End User License Agreement (the "Agreement") is between you and Prakash Meghani - Krayons Global
 (the "Licensor"). It governs your installation and use of BusinessOps, including its source code,
 documentation and other files, and any updates the Licensor provides (the "Software"). By installing or
 using the Software you agree to this Agreement. If you do not agree, do not install or use the Software.
@@ -93,4 +93,4 @@ release. BusinessOps is an independent product and is not made, endorsed or supp
 
 ## 12. Contact
 
-Questions about this Agreement: hello@conceptwebworld.com
+Questions about this Agreement: krayonsglobal@gmail.com

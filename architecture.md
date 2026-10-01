@@ -1838,6 +1838,7 @@ the engine or isolated in an agent before reaching the main thread.
 | [0055](docs/decisions/ADR-0055-distribution-package-built-from-an-allowlist.md) | The installable package is built from an allowlist into its own plugin root; the development repository stays complete | Accepted 2026-09-30; amended by ADR-0057 |
 | [0056](docs/decisions/ADR-0056-plugin-root-paths-for-shipped-reference-documents.md) | Commands and skills name `reference/` documents by `${CLAUDE_PLUGIN_ROOT}` path; amends ADR-0042's static-guard rule by that one form | Accepted 2026-09-30 |
 | [0057](docs/decisions/ADR-0057-one-public-repository-for-source-and-package.md) | One public repository holds the source and the committed package (`dist/businessops`, submitted as the plugin path); no separate distribution repository | Accepted 2026-10-01 |
+| [0058](docs/decisions/ADR-0058-krayons-global-rights-holder-and-support-identity.md) | The current rights holder and support identity: Prakash Meghani - Krayons Global, krayonsglobal@gmail.com; historical records keep the identity of their time | Accepted 2026-10-01; supersedes ADR-0054 in part |
 | [0043](docs/decisions/ADR-0043-defect-status-for-verified-product-fixes.md) | Defect register status vocabulary for verified product fixes: `fixed_product` | Accepted 2026-09-20 — amends 0039 in part (§G.1 `status` vocabulary only; 0039 unedited). M13-DEF-04 is its first application |
 
 ---

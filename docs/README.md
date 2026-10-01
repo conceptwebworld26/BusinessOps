@@ -134,3 +134,4 @@ index, and `project_plan.md` owns each milestone's status. *(Noted 2026-09-27, M
 - [ADR-0055 — The installable package is built from an allowlist into its own plugin root](decisions/ADR-0055-distribution-package-built-from-an-allowlist.md)
 - [ADR-0056 — Commands and skills name the shipped reference documents by their plugin-root path](decisions/ADR-0056-plugin-root-paths-for-shipped-reference-documents.md)
 - [ADR-0057 — One public repository holds the source and the built package](decisions/ADR-0057-one-public-repository-for-source-and-package.md)
+- [ADR-0058 — Prakash Meghani - Krayons Global is the current rights holder and support identity](decisions/ADR-0058-krayons-global-rights-holder-and-support-identity.md)

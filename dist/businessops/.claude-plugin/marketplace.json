@@ -2,8 +2,8 @@
   "name": "businessops",
   "description": "BusinessOps — AI business operations and intelligence assistant.",
   "owner": {
-    "name": "Prakash Meghani - Concept Web World",
-    "email": "hello@conceptwebworld.com"
+    "name": "Prakash Meghani - Krayons Global",
+    "email": "krayonsglobal@gmail.com"
   },
   "plugins": [
     {
@@ -13,8 +13,8 @@
       "version": "0.1.0",
       "source": "./",
       "author": {
-        "name": "Prakash Meghani - Concept Web World",
-        "email": "hello@conceptwebworld.com"
+        "name": "Prakash Meghani - Krayons Global",
+        "email": "krayonsglobal@gmail.com"
       },
       "homepage": "https://github.com/conceptwebworld26/BusinessOps",
       "license": "LicenseRef-BusinessOps-Proprietary",

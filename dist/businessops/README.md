@@ -489,7 +489,7 @@ claude plugin validate . --strict                                          # thi
 
 ## Support
 
-Questions, problems and security concerns: **hello@conceptwebworld.com**. Please include your operating system, your
+Questions, problems and security concerns: **krayonsglobal@gmail.com**. Please include your operating system, your
 Claude application and version, and the command you ran. Do not send confidential business data.
 
 ## Privacy
@@ -499,5 +499,5 @@ processes your conversation under your agreement with Anthropic. Details are in 
 
 ## License
 
-Proprietary. Copyright (c) 2026 Prakash Meghani - Concept Web World. All rights reserved. You may install and use
+Proprietary. Copyright (c) 2026 Prakash Meghani - Krayons Global. All rights reserved. You may install and use
 BusinessOps under the [End User License Agreement](EULA.md); see [`LICENSE`](LICENSE).
