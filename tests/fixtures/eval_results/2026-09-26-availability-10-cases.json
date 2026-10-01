@@ -1,0 +1,1331 @@
+{
+ "description": "M13.2 availability-completion evaluation, 2026-09-26: the ten routing cases the 2026-09-25 34-case re-evaluation could not complete (r02-r09 session limit; r15, r16 turn limit), run under ADR-0039 as amended by ADR-0047, ADR-0048 and ADR-0049 with execution.max_turns 20. Ten claude plugin eval invocations, trimmed to the fields the M13-DEF-06 rule reads plus grader outcomes. Source: evals/results/<dir>/aggregate-result.json (gitignored). Separate from, and not a re-score of, the closing evaluation or the 34-case re-evaluation.",
+ "repository_head": "21ee21b21213ad80273650f056ef2f318023742c",
+ "working_tree": "uncommitted M13.2 working tree at evaluation time",
+ "cost_ceiling_usd": 47.74,
+ "prior_spend_usd": 27.2552,
+ "authorization_usd": 75.0,
+ "max_turns": 20,
+ "invocations": [
+  {
+   "case_filter": "r02*",
+   "results_dir": "evals/results/2026-09-26T04-32-10-004Z",
+   "claudeVersion": "2.1.281",
+   "startedAt": "2026-09-26T04:32:10.004Z",
+   "costUsd": 1.627729,
+   "max_cost_usd": 46.74,
+   "partial": false,
+   "ablation": "with-without",
+   "threshold": 1,
+   "cases": [
+    {
+     "name": "r02-positive-biq-benchmark-comparison",
+     "dir": "evals/routing/r02-positive-biq-benchmark-comparison",
+     "maxTurns": 20,
+     "arms": {
+      "with": [
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 16,
+        "costUsd": 0.474585,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-boEH1d",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 10,
+        "costUsd": 0.289722,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-la8GOk",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 9,
+        "costUsd": 0.275152,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-QRyr3X",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       }
+      ],
+      "without": [
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 5,
+        "costUsd": 0.189438,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-TXMT3a",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 6,
+        "costUsd": 0.232893,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-9g29H6",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 5,
+        "costUsd": 0.165938,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-k00jky",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case_filter": "r03*",
+   "results_dir": "evals/results/2026-09-26T04-36-07-342Z",
+   "claudeVersion": "2.1.281",
+   "startedAt": "2026-09-26T04:36:07.342Z",
+   "costUsd": 1.124168,
+   "max_cost_usd": 45.11,
+   "partial": false,
+   "ablation": "with-without",
+   "threshold": 1,
+   "cases": [
+    {
+     "name": "r03-positive-biq-company-analysis",
+     "dir": "evals/routing/r03-positive-biq-company-analysis",
+     "maxTurns": 20,
+     "arms": {
+      "with": [
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 8,
+        "costUsd": 0.287483,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-ue4jO1",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 7,
+        "costUsd": 0.277715,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-dvEg6V",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 9,
+        "costUsd": 0.295323,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-xGgw1Y",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       }
+      ],
+      "without": [
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 3,
+        "costUsd": 0.092685,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-fmKWds",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 2,
+        "costUsd": 0.081099,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-fdwwLp",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 2,
+        "costUsd": 0.089863,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-s7o4vW",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case_filter": "r04*",
+   "results_dir": "evals/results/2026-09-26T04-38-32-091Z",
+   "claudeVersion": "2.1.281",
+   "startedAt": "2026-09-26T04:38:32.091Z",
+   "costUsd": 1.343499,
+   "max_cost_usd": 43.99,
+   "partial": false,
+   "ablation": "with-without",
+   "threshold": 1,
+   "cases": [
+    {
+     "name": "r04-positive-biq-competitor-analysis",
+     "dir": "evals/routing/r04-positive-biq-competitor-analysis",
+     "maxTurns": 20,
+     "arms": {
+      "with": [
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 7,
+        "costUsd": 0.362514,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-soGTtl",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 8,
+        "costUsd": 0.362619,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-Mdf5LB",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 7,
+        "costUsd": 0.340461,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-T0jQHR",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       }
+      ],
+      "without": [
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 2,
+        "costUsd": 0.090703,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-GA2ksk",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 2,
+        "costUsd": 0.093578,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-5hWr8A",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 2,
+        "costUsd": 0.093625,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-76jrWX",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case_filter": "r05*",
+   "results_dir": "evals/results/2026-09-26T04-40-49-531Z",
+   "claudeVersion": "2.1.281",
+   "startedAt": "2026-09-26T04:40:49.531Z",
+   "costUsd": 1.920272,
+   "max_cost_usd": 42.64,
+   "partial": false,
+   "ablation": "with-without",
+   "threshold": 1,
+   "cases": [
+    {
+     "name": "r05-positive-biq-customer-intelligence",
+     "dir": "evals/routing/r05-positive-biq-customer-intelligence",
+     "maxTurns": 20,
+     "arms": {
+      "with": [
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 7,
+        "costUsd": 0.259262,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-8yW4jH",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 6,
+        "costUsd": 0.236099,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-CAtj71",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 7,
+        "costUsd": 0.255111,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-oVdhbq",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       }
+      ],
+      "without": [
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 6,
+        "costUsd": 0.188446,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-usWR1n",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 3,
+        "costUsd": 0.115519,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-A8ADBJ",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 89,
+        "costUsd": 0.865835,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-qwMTmk",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case_filter": "r06*",
+   "results_dir": "evals/results/2026-09-26T04-46-20-706Z",
+   "claudeVersion": "2.1.281",
+   "startedAt": "2026-09-26T04:46:20.706Z",
+   "costUsd": 1.237558,
+   "max_cost_usd": 40.72,
+   "partial": false,
+   "ablation": "with-without",
+   "threshold": 1,
+   "cases": [
+    {
+     "name": "r06-positive-biq-data-ingestion",
+     "dir": "evals/routing/r06-positive-biq-data-ingestion",
+     "maxTurns": 20,
+     "arms": {
+      "with": [
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 4,
+        "costUsd": 0.194241,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-17cSzm",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 1x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 4,
+        "costUsd": 0.195044,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-agzBar",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 1x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 4,
+        "costUsd": 0.191879,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-FXlmVS",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 1x (expected 1..∞)"
+         }
+        ]
+       }
+      ],
+      "without": [
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 12,
+        "costUsd": 0.245703,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-sOW31I",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 11,
+        "costUsd": 0.215413,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-iU5vY2",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 12,
+        "costUsd": 0.195279,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-EaV7un",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case_filter": "r07*",
+   "results_dir": "evals/results/2026-09-26T04-49-44-764Z",
+   "claudeVersion": "2.1.281",
+   "startedAt": "2026-09-26T04:49:44.764Z",
+   "costUsd": 2.042969,
+   "max_cost_usd": 39.49,
+   "partial": false,
+   "ablation": "with-without",
+   "threshold": 1,
+   "cases": [
+    {
+     "name": "r07-positive-biq-decision-support",
+     "dir": "evals/routing/r07-positive-biq-decision-support",
+     "maxTurns": 20,
+     "arms": {
+      "with": [
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 11,
+        "costUsd": 0.266979,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-ymJ1mF",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 1x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 7,
+        "costUsd": 0.222994,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-AHpl5U",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 1x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 8,
+        "costUsd": 0.265275,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-y6xyRU",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       }
+      ],
+      "without": [
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 19,
+        "costUsd": 0.492023,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-dO3jrN",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 14,
+        "costUsd": 0.462182,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-MeHsEM",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 12,
+        "costUsd": 0.333516,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-ZRUntW",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case_filter": "r08*",
+   "results_dir": "evals/results/2026-09-26T04-54-47-760Z",
+   "claudeVersion": "2.1.281",
+   "startedAt": "2026-09-26T04:54:47.760Z",
+   "costUsd": 2.13401,
+   "max_cost_usd": 37.44,
+   "partial": false,
+   "ablation": "with-without",
+   "threshold": 1,
+   "cases": [
+    {
+     "name": "r08-positive-biq-executive-report",
+     "dir": "evals/routing/r08-positive-biq-executive-report",
+     "maxTurns": 20,
+     "arms": {
+      "with": [
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 18,
+        "costUsd": 0.745595,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-yJ32Hx",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 16,
+        "costUsd": 0.552449,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-4J32Bs",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 7,
+        "costUsd": 0.248098,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-Ptku0q",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       }
+      ],
+      "without": [
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 4,
+        "costUsd": 0.132842,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-PUkBmG",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 6,
+        "costUsd": 0.143063,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-QIqL9K",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 5,
+        "costUsd": 0.311962,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-a00Kjp",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case_filter": "r09*",
+   "results_dir": "evals/results/2026-09-26T04-59-58-113Z",
+   "claudeVersion": "2.1.281",
+   "startedAt": "2026-09-26T04:59:58.113Z",
+   "costUsd": 1.191993,
+   "max_cost_usd": 35.31,
+   "partial": false,
+   "ablation": "with-without",
+   "threshold": 1,
+   "cases": [
+    {
+     "name": "r09-positive-biq-financial-analysis",
+     "dir": "evals/routing/r09-positive-biq-financial-analysis",
+     "maxTurns": 20,
+     "arms": {
+      "with": [
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 6,
+        "costUsd": 0.229733,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-zkZ5Wu",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 6,
+        "costUsd": 0.233927,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-U90XkM",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 6,
+        "costUsd": 0.229593,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-8gUwKQ",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       }
+      ],
+      "without": [
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 4,
+        "costUsd": 0.136194,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-7EL35q",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 5,
+        "costUsd": 0.156841,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-OihLue",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 6,
+        "costUsd": 0.205706,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-LpKrIE",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case_filter": "r15*",
+   "results_dir": "evals/results/2026-09-26T05-03-03-043Z",
+   "claudeVersion": "2.1.281",
+   "startedAt": "2026-09-26T05:03:03.043Z",
+   "costUsd": 2.091661,
+   "max_cost_usd": 34.12,
+   "partial": false,
+   "ablation": "with-without",
+   "threshold": 1,
+   "cases": [
+    {
+     "name": "r15-positive-biq-strategy-recommendations",
+     "dir": "evals/routing/r15-positive-biq-strategy-recommendations",
+     "maxTurns": 20,
+     "arms": {
+      "with": [
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 5,
+        "costUsd": 0.203824,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-wWE8WJ",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 1x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 5,
+        "costUsd": 0.203274,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-RiRiR9",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 1x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 11,
+        "costUsd": 0.329251,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-vcfxdo",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       }
+      ],
+      "without": [
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 12,
+        "costUsd": 0.472214,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-oRJ1T6",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 15,
+        "costUsd": 0.418044,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-b7r2v5",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 12,
+        "costUsd": 0.465053,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-Cu7XBq",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case_filter": "r16*",
+   "results_dir": "evals/results/2026-09-26T05-07-12-696Z",
+   "claudeVersion": "2.1.281",
+   "startedAt": "2026-09-26T05:07:12.696Z",
+   "costUsd": 2.891358,
+   "max_cost_usd": 32.03,
+   "partial": false,
+   "ablation": "with-without",
+   "threshold": 1,
+   "cases": [
+    {
+     "name": "r16-positive-biq-swot",
+     "dir": "evals/routing/r16-positive-biq-swot",
+     "maxTurns": 20,
+     "arms": {
+      "with": [
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 11,
+        "costUsd": 0.476729,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-i8cwS9",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 11,
+        "costUsd": 0.531335,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-0DRLmw",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 1,
+        "passed": true,
+        "turns": 15,
+        "costUsd": 0.585641,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-eIpWcI",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": true,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 2x (expected 1..∞)"
+         }
+        ]
+       }
+      ],
+      "without": [
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 33,
+        "costUsd": 0.442348,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-kB9jsM",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 26,
+        "costUsd": 0.431101,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-5eymUG",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       },
+       {
+        "score": 0,
+        "passed": false,
+        "turns": 20,
+        "costUsd": 0.424205,
+        "judgeCostUsd": 0,
+        "error": null,
+        "trace": "claude-eval-TbypTL",
+        "graders": [
+         {
+          "name": "g-skill-fired",
+          "passed": false,
+          "scored": true,
+          "withOnly": false,
+          "explanation": "Skill called 0x (expected 1..∞)"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

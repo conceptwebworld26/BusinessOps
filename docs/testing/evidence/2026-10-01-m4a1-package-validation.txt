@@ -1,0 +1,39 @@
+BusinessOps M4A.1 — package rebuild and strict validation after removing shipped CLAUDE.md references
+Captured: 2026-10-01 08:49:43 +0530 on native Windows with Git for Windows; Claude Code 2.1.285 (Claude Code)
+Absolute paths are shown as <repo>.
+
+$ python scripts/build_distribution.py
+{
+  "package": "<repo>\dist\businessops",
+  "files": 188,
+  "bytes": 2650190,
+  "problems": []
+}
+
+$ claude plugin validate dist/businessops --strict
+Validating marketplace manifest: <repo>\dist\businessops\.claude-plugin\marketplace.json
+
+✔ Validation passed
+exit status: 0
+
+$ claude plugin validate dist/businessops/.claude-plugin/plugin.json --strict
+Validating plugin manifest: <repo>\dist\businessops\.claude-plugin\plugin.json
+
+✔ Validation passed
+exit status: 0
+
+--- package checks ---
+files: 188
+bytes: 2650190
+symlinks: 0
+files over 262144 bytes: 0
+binary files: 0
+developer/history/test/eval paths: 0
+personal machine paths: 0
+${CLAUDE_PLUGIN_ROOT}/reference/ tokens: 113 (76 before M4A.1, plus 37 replacing CLAUDE.md citations); missing targets: 0; relative reference mentions: 0
+CLAUDE.md in commands/skills/agents/reference/hooks/config/manifests: 0 files
+CLAUDE.md in README: 1 line (link into the development repository); in engine: comments/docstrings only
+.mcp.json identical to repository copy: yes; repository .mcp.json last modified: 2026-09-30 14:05
+
+--- MCP (unchanged production form) ---
+plugin:businessops:bops-verifier: sh <repo>/dist/businessops/lib/bops_run.sh --verifier - ✔ Connected

@@ -1,0 +1,179 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/conceptwebworld26/BusinessOps/lib/schemas/strategy.schema.json",
+  "title": "BusinessOps Strategy Analysis",
+  "description": "Class-7 strategy recommendations grounded in one genuine strict synthesis set and held beside it (ADR-0031). Each recommendation carries exactly six authored fields - action, evidence (synthesis statement ids), rationale, expected benefit, risks, dependencies - and a confidence derived from the cited statements' own reason codes, never authored. The record is closed at every level: there is no priority, rank, score, weight, winner, estimated value or execution status anywhere, because BusinessOps issues draft analysis for a person to decide on and executes nothing. Order is deterministic presentation order, not importance. This schema checks shape; whether each id names a real statement in the grounding set is decided by the strategy engine, which is authoritative.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "analysis", "issued_by", "subject", "as_of", "business_model",
+    "currency", "quality_grade", "synthesis_digest", "trust_statement", "human_decision",
+    "order_note", "recommendations", "empty_state", "material_not_cited", "conflicts",
+    "limitations", "confidence"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "analysis": {"const": "strategy"},
+    "issued_by": {"const": "bops-strategy-recommendations"},
+    "subject": {"type": ["string", "null"]},
+    "as_of": {"type": ["string", "null"]},
+    "business_model": {"type": ["string", "null"]},
+    "currency": {"type": ["string", "null"]},
+    "quality_grade": {"type": ["string", "null"]},
+    "synthesis_digest": {
+      "description": "SHA-256 of the grounding synthesis set's serialisation when the recommendations were built: an identity for the exact evidence, not a copy of it.",
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "trust_statement": {"type": "string", "minLength": 1},
+    "human_decision": {"type": "string", "minLength": 1},
+    "order_note": {"type": "string", "minLength": 1},
+    "recommendations": {"type": "array", "items": {"$ref": "#/definitions/recommendation"}},
+    "empty_state": {
+      "description": "Null when recommendations were issued; the explicit empty state when none were.",
+      "anyOf": [{"type": "null"}, {"const": "No supported recommendation identified."}]
+    },
+    "material_not_cited": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^sy-[0-9a-f]{12}$"}
+    },
+    "conflicts": {"type": "array", "items": {"type": "object"}},
+    "limitations": {"type": "array", "items": {"$ref": "#/definitions/limitation"}},
+    "confidence": {"$ref": "#/definitions/confidence_assessment"}
+  },
+  "definitions": {
+    "synthesis_id": {"type": "string", "pattern": "^sy-[0-9a-f]{12}$"},
+    "text": {"type": "string", "pattern": "\\S"},
+    "level": {"enum": ["HIGH", "MEDIUM", "LOW"]},
+    "confidence_assessment": {
+      "type": "object",
+      "required": ["confidence", "reasons"],
+      "properties": {
+        "confidence": {"$ref": "#/definitions/level"},
+        "reasons": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recommendation_id", "issued_by", "provenance_class", "label", "action", "evidence",
+        "rationale", "expected_benefit", "risks", "dependencies", "confidence",
+        "confidence_reasons", "support", "rests_on", "material", "evidence_detail",
+        "assumptions", "conflicts", "limitations", "caveats"
+      ],
+      "properties": {
+        "recommendation_id": {"type": "string", "pattern": "^rec-[0-9a-f]{12}$"},
+        "issued_by": {"const": "bops-strategy-recommendations"},
+        "provenance_class": {"const": 7},
+        "label": {"const": "RECOMMENDATION"},
+        "action": {"$ref": "#/definitions/text"},
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/synthesis_id"}
+        },
+        "rationale": {"$ref": "#/definitions/text"},
+        "expected_benefit": {"$ref": "#/definitions/text"},
+        "risks": {"type": "array", "minItems": 1, "items": {"$ref": "#/definitions/text"}},
+        "dependencies": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["text", "assumption_id"],
+            "properties": {
+              "text": {"$ref": "#/definitions/text"},
+              "assumption_id": {"type": ["string", "null"], "pattern": "^sy-[0-9a-f]{12}$"}
+            }
+          }
+        },
+        "confidence": {"$ref": "#/definitions/level"},
+        "confidence_reasons": {"type": "array", "items": {"type": "string"}},
+        "support": {"enum": ["supported", "partially_supported"]},
+        "rests_on": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"enum": ["internal", "external"]}
+        },
+        "material": {"type": "boolean"},
+        "evidence_detail": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/evidence_detail"}
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["synthesis_id", "statement", "support", "confidence",
+                         "confidence_reasons"],
+            "properties": {
+              "synthesis_id": {"$ref": "#/definitions/synthesis_id"},
+              "statement": {"type": "string"},
+              "support": {"type": "string"},
+              "confidence": {"$ref": "#/definitions/level"},
+              "confidence_reasons": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "conflicts": {"type": "array", "items": {"type": "object"}},
+        "limitations": {"type": "array", "items": {"$ref": "#/definitions/limitation"}},
+        "caveats": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "evidence_detail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "synthesis_id", "kind", "evidence_class", "origin", "domain", "trust", "statement",
+        "support", "confidence", "confidence_reasons", "material", "materiality",
+        "conflict_refs", "unresolved_dimensions", "chain", "supports"
+      ],
+      "properties": {
+        "synthesis_id": {"$ref": "#/definitions/synthesis_id"},
+        "kind": {"enum": ["FACT", "CALCULATION", "SOURCED", "INTERPRETATION"]},
+        "evidence_class": {"enum": [1, 3, 4, 5]},
+        "origin": {"type": "string"},
+        "domain": {"enum": ["internal", "external"]},
+        "trust": {"enum": ["internal", "untrusted"]},
+        "statement": {"type": "string", "minLength": 1},
+        "support": {"enum": ["supported", "partially_supported"]},
+        "confidence": {"$ref": "#/definitions/level"},
+        "confidence_reasons": {"type": "array", "items": {"type": "string"}},
+        "material": {"type": "boolean"},
+        "materiality": {"type": ["object", "null"]},
+        "conflict_refs": {"type": "array", "items": {"type": "string"}},
+        "unresolved_dimensions": {"type": "object"},
+        "chain": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+        "supports": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["synthesis_id", "kind", "domain", "origin", "statement"],
+            "properties": {
+              "synthesis_id": {"$ref": "#/definitions/synthesis_id"},
+              "kind": {"enum": ["FACT", "CALCULATION", "SOURCED", "INTERPRETATION"]},
+              "domain": {"enum": ["internal", "external"]},
+              "origin": {"type": "string"},
+              "statement": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "limitation": {
+      "type": "object",
+      "required": ["code", "reason"],
+      "properties": {
+        "code": {"type": "string"},
+        "subject": {"type": ["string", "null"]},
+        "reason": {"type": ["string", "null"]},
+        "status": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

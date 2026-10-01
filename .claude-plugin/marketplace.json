@@ -1,0 +1,30 @@
+{
+  "name": "businessops",
+  "description": "BusinessOps — AI business operations and intelligence assistant.",
+  "owner": {
+    "name": "Prakash Meghani - Concept Web World",
+    "email": "hello@conceptwebworld.com"
+  },
+  "plugins": [
+    {
+      "name": "businessops",
+      "displayName": "BusinessOps",
+      "description": "BusinessOps — AI business operations and intelligence assistant. Analyses your spreadsheets and CSV exports: business health, KPIs, sales, customers, products, profitability and cash flow, with backtested forecasts and anomaly detection. It researches companies, markets, competitors and industries from public sources, and builds SWOT, strategy, decision-support and executive reports. Every figure from your data is computed deterministically, and every claim is traced to its source.",
+      "version": "0.1.0",
+      "source": "./",
+      "author": {
+        "name": "Prakash Meghani - Concept Web World",
+        "email": "hello@conceptwebworld.com"
+      },
+      "homepage": "https://github.com/conceptwebworld26/BusinessOps",
+      "license": "LicenseRef-BusinessOps-Proprietary",
+      "keywords": [
+        "business-intelligence",
+        "analytics",
+        "kpi",
+        "forecasting",
+        "decision-support"
+      ]
+    }
+  ]
+}

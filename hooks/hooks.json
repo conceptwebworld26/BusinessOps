@@ -1,0 +1,51 @@
+{
+  "description": "BusinessOps write guard (ADR-0051): once a session uses BusinessOps, a consequential filesystem write is denied before it runs unless the user approved that exact operation. Separately, a PostToolUse capture stores the research scout's reply verbatim for the engine, so no model copies it (ADR-0053).",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Write|Edit|MultiEdit|NotebookEdit|PowerShell|Skill|Agent|Task|ScheduleWakeup|CronCreate|SendMessage|RemoteTrigger",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/bops_guard.sh\" pre-tool-use",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/bops_guard.sh\" user-prompt-submit",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "UserPromptExpansion": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/bops_guard.sh\" user-prompt-expansion",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/lib/bops_run.sh\" --handback",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

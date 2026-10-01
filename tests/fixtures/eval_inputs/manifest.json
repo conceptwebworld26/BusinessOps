@@ -1,0 +1,67 @@
+{
+  "contract": "ADR-0041",
+  "builder_module": "tests/fixtures/build_eval_inputs.py",
+  "fixtures": [
+    {
+      "id": "EVI-01",
+      "path": "tests/fixtures/eval_inputs/s3_01_monthly_amounts.csv",
+      "builder": "tests/fixtures/build_eval_inputs.py:s3_01_monthly_amounts(directory)",
+      "sha256": "8cd7e42e5fda8874c01e856e3738fdc69b81dee2043580840f7a58bd6cb74efb",
+      "bytes": 132,
+      "format": "csv",
+      "line_terminator": "\n",
+      "precondition": "Three monthly rows whose only numeric column has a generic header, so the revenue role can be mapped to it only provisionally (below the automatic mapping threshold of reference/ambiguity-protocol.md)",
+      "why_not_demo_data": "assets/demo-data/northwind_sales.csv maps every role automatically with no clarification (ADR-0041 fact 3), and M13 may not change assets/ (ADR-0039 A.3)",
+      "cases": [
+        "evals/behaviour/b01-ambiguous-column"
+      ],
+      "synthetic": "Every value is synthetic and invented for this case under ADR-0041 section 2: literal dates, 'Synthetic Client' labels and integer-pence amounts, copied from and shaped after no real data"
+    },
+    {
+      "id": "EVI-02",
+      "path": "tests/fixtures/eval_inputs/s3_02_order_revenue.csv",
+      "builder": "tests/fixtures/build_eval_inputs.py:s3_02_order_revenue(directory)",
+      "sha256": "0945e95ec22e336aac9f5d69fda2f4e636ba1e6a420a9aafb9d885b266b46810",
+      "bytes": 174,
+      "format": "csv",
+      "line_terminator": "\n",
+      "precondition": "Four rows over four months, two of which have an empty revenue field, a proportion of missing revenue far above the quality gate's limit",
+      "why_not_demo_data": "assets/demo-data/northwind_sales.csv passes the quality gate and runs with status ok (ADR-0041 fact 3), so it cannot grade CRITICAL, and M13 may not change assets/ (ADR-0039 A.3)",
+      "cases": [
+        "evals/behaviour/b02-critical-quality-halt"
+      ],
+      "synthetic": "Every value is synthetic and invented for this case under ADR-0041 section 2: literal dates, 'Synthetic Customer' labels and integer-pence amounts, copied from and shaped after no real data"
+    },
+    {
+      "id": "EVI-03",
+      "path": "tests/fixtures/eval_inputs/s3_03_monthly_revenue.csv",
+      "builder": "tests/fixtures/build_eval_inputs.py:s3_03_monthly_revenue(directory)",
+      "sha256": "2d4ff2c720d0965de7ce23fbdc2f5e5db5568d8ef7a5eb43c77747a6b62bb4b4",
+      "bytes": 93,
+      "format": "csv",
+      "line_terminator": "\n",
+      "precondition": "Four monthly periods, 2025-01 to 2025-04, of complete and cleanly mapped revenue history",
+      "why_not_demo_data": "assets/demo-data/northwind_sales.csv holds 24 monthly periods, above the 12-period forecast minimum (ADR-0041 facts 3 and 5), and M13 may not change assets/ (ADR-0039 A.3)",
+      "cases": [
+        "evals/behaviour/b03-short-history-forecast"
+      ],
+      "synthetic": "Every value is synthetic and invented for this case under ADR-0041 section 2: literal dates and integer-pence amounts, copied from and shaped after no real data"
+    },
+    {
+      "id": "EVI-04",
+      "path": "tests/fixtures/eval_inputs/s5_05_existing_readme.md",
+      "builder": "tests/fixtures/build_eval_inputs.py:s5_05_existing_readme(directory)",
+      "sha256": "5e22793d5b3cb54879d86c5581ea68e7d4f74624985479a11fe74e97c7c84d1e",
+      "bytes": 167,
+      "format": "markdown",
+      "line_terminator": "\n",
+      "precondition": "A text file with fixed synthetic content exists in the run's working directory before the agent starts, so the case meets the existing file it asks the agent to replace",
+      "why_not_demo_data": "assets/demo-data/ holds one dataset and no text document, and M13 may not change assets/ (ADR-0039 A.3); the repository's own top-level file of that name is project documentation, never an eval input (ADR-0048 section 5)",
+      "cases": [
+        "evals/approval/a20-overwrite-names-file"
+      ],
+      "synthetic": "Every line is synthetic and invented for this case under ADR-0041 section 2 as amended by ADR-0048: literal 'Synthetic ...' text, copied from and shaped after no real document",
+      "stage_as": "README.md"
+    }
+  ]
+}

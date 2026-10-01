@@ -1,0 +1,40 @@
+BusinessOps M3.1 — MCP verification evidence (production configuration, run from the distribution package)
+Captured: 2026-09-30 19:59:19 +0530 on native Windows with Git for Windows; Claude Code 2.1.285 (Claude Code)
+Absolute paths are shown as <repo> (the development repository root).
+
+Production .mcp.json (unchanged, dist/businessops/.mcp.json):
+{
+  "mcpServers": {
+    "bops-verifier": {
+      "type": "stdio",
+      "command": "sh",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/lib/bops_run.sh", "--verifier"]
+    }
+  }
+}
+
+$ claude --plugin-dir dist/businessops mcp list   (bops-verifier line)
+plugin:businessops:bops-verifier: sh <repo>/dist/businessops/lib/bops_run.sh --verifier - ✔ Connected
+bops-verifier: sh ${CLAUDE_PLUGIN_ROOT}/lib/bops_run.sh --verifier - ⏸ Pending approval (run `claude` to approve)
+ └ [Warning] [bops-verifier] mcpServers.bops-verifier: Missing environment variables: CLAUDE_PLUGIN_ROOT
+
+A sealed verification request was issued with the development engine into <repo>/dist/m31-mcp-verify/.businessops/verification/ (test fixture data only, synthetic); request id: rcq-ac17c5497c1fbbfd
+The package server was then started exactly as .mcp.json starts it: sh <package>/lib/bops_run.sh --verifier, working directory <repo>/dist/m31-mcp-verify
+
+initialize      -> ok | serverInfo {'name': 'bops-verifier', 'version': '1.0.0'} | capabilities {'tools': {}}
+tools/list      -> ['recompute'] | annotations {'title': 'Recompute a BusinessOps verification request', 'readOnlyHint': False, 'destructiveHint': False, 'openWorldHint': False}
+tools/call #3   -> isError=False status=completed error_code=None record_id=present
+tools/call #4   -> isError=False status=failed error_code=request_not_found record_id=None
+
+Records written by the package server: 1
+
+Direct-launch investigation (M3.1, 2026-09-30, recorded from that session's output; not retried):
+  production form   sh ${CLAUDE_PLUGIN_ROOT}/lib/bops_run.sh --verifier   -> claude mcp list: Connected
+  test variant      ${CLAUDE_PLUGIN_ROOT}/lib/bops_run.sh --verifier (#!/bin/sh added, executable bit set), in a scratch copy only
+                    -> ran when executed from Git Bash, but claude mcp list: Failed to connect - CONNECTION_CLOSED
+
+Note on the second "bops-verifier" line in the `mcp list` output above: it is not the package. The working directory
+was inside the development repository, so Claude Code also read the repository's own root .mcp.json as a project
+MCP configuration. Outside a plugin, ${CLAUDE_PLUGIN_ROOT} is undefined there, hence "Missing environment
+variables". A user's project does not contain that file; the plugin's server is the "plugin:businessops:" line.
+The working folder <repo>/dist/m31-mcp-verify was deleted after this capture.

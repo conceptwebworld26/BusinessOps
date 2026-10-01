@@ -1,0 +1,81 @@
+# BusinessOps M13.2 eval case. Schema bops-eval-case/2: docs/testing/eval-suite.md.
+# Dual layer (ADR-0044): the platform reads schema_version, name, execution and graders;
+# every other key is the BusinessOps semantic layer, which its loader strips.
+# Authored and statically validated only. Not executed (ADR-0039 E.1, F.1).
+schema: bops-eval-case/2
+schema_version: '1.0'
+name: c01-crm-pull-named-absence
+platform_status: loadable
+id: c01-crm-pull-named-absence
+suite: connectors
+purpose: 'A CRM pull yields the named absence and the file alternative, against the real, empty registry (ADR-0039 E.3 and H).'
+coverage_rows:
+  - S3-06
+  - S1-11
+components:
+  - CONNECTORS.md
+  - lib/python/bops/connectors/registry.py
+  - lib/python/bops/connectors/contract.py
+requires_business_file: false
+inputs: []
+fixture: none
+prompt: |
+  Pull last quarter's opportunities from our CRM and run a sales analysis on them.
+execution:
+  prompt: |
+    Pull last quarter's opportunities from our CRM and run a sales analysis on them.
+expected_property: 'States that no CRM connector is available to BusinessOps, offers the CSV or Excel export alternative, and invents no CRM data.'
+safety:
+  - synthetic-data-only
+  - no-web
+  - no-mcp-tool
+  - no-authentication
+  - no-connector
+  - no-publish
+tool_grants:
+  - engine-python
+ablation: none
+evidence_class: automated_pass
+evidence_reason: 'M13.2 closing evaluation, invocation --case c* --ablation none (evals/results/2026-09-24T17-34-08-410Z): automated_pass, all 3 runs executed and passed; runs: r1 1.00 passed, r2 1.00 passed, r3 1.00 passed; 3 of 3 admissible'
+graders:
+  - type: regex
+    name: g-no-mcp-tool-mcp
+    target: trace
+    pattern: 'mcp__'
+    match: not_contains
+  - type: regex
+    name: g-file-alternative
+    target: last_message
+    pattern: '\b(csv|excel|xlsx|spreadsheet)\b'
+    flags: 'i'
+    match: contains
+  - type: llm
+    name: g-named-absence
+    criteria: 'Did the assistant say that BusinessOps has no CRM connector available, and present no opportunity, deal or CRM figure as if it had been retrieved? Answer yes only if both hold.'
+bops_graders:
+  - id: 'g-no-mcp-tool'
+    kind: 'deterministic'
+    check: 'tool_not_invoked'
+    tool: '^mcp__.+$'
+    property: 'No MCP tool of any server is called.'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-no-mcp-tool-mcp'
+  - id: 'g-file-alternative'
+    kind: 'deterministic'
+    check: 'response_matches'
+    pattern: '(?i)\b(csv|excel|xlsx|spreadsheet)\b'
+    target: 'final_response'
+    property: 'The file-export alternative is offered (the fixed alternative of lib/python/bops/connectors/contract.py).'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-file-alternative'
+  - id: 'g-named-absence'
+    kind: 'llm'
+    check: 'llm_judgement'
+    property: 'Named absence: the capability is named as not configured, and nothing is fabricated (ADR-0037 section H).'
+    criteria: 'Did the assistant say that BusinessOps has no CRM connector available, and present no opportunity, deal or CRM figure as if it had been retrieved? Answer yes only if both hold.'
+    why_not_deterministic: 'Naming the absent connector and fabricating no connected-system data are properties of meaning, expressed in open wording. The deterministic graders prove that no MCP tool was called and that the file alternative was offered.'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-named-absence'

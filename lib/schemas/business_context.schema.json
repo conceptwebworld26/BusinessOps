@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/conceptwebworld26/BusinessOps/lib/schemas/business_context.schema.json",
+  "title": "BusinessOps Business Context",
+  "description": "The business's identity, characteristics, reporting conventions and analysis preferences (ADR-0011). Every field is optional; absence is represented explicitly and never guessed. x-privacy on each field drives the disclosure tiers in ADR-0009.",
+  "type": "object",
+  "additionalProperties": false,
+
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "x-privacy": "public"
+    },
+
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Who the business is.",
+      "properties": {
+        "business_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Externalizable ONLY when the analysis is explicitly about the user's own public company; otherwise Tier 2 (ADR-0011).",
+          "x-privacy": "conditional"
+        },
+        "industry": {
+          "type": "string",
+          "x-vocabulary": "industry",
+          "x-privacy": "public"
+        },
+        "industry_taxonomy_system": {
+          "type": "string",
+          "x-vocabulary": "taxonomy_system",
+          "x-privacy": "public"
+        },
+        "industry_taxonomy_code": {
+          "type": "string",
+          "maxLength": 20,
+          "x-privacy": "public"
+        },
+        "business_model": {
+          "type": "string",
+          "x-vocabulary": "business_model",
+          "description": "Drives KPI relevance filtering.",
+          "x-privacy": "public"
+        },
+        "size_band": {
+          "type": "string",
+          "x-vocabulary": "size_band",
+          "description": "A band, never exact headcount (ADR-0009 banding rule).",
+          "x-privacy": "public"
+        },
+        "products_services": {
+          "type": "array",
+          "maxItems": 500,
+          "items": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "description": "Specific named offerings. Internal — names can identify the business.",
+          "x-privacy": "internal"
+        },
+        "product_categories": {
+          "type": "array",
+          "maxItems": 100,
+          "items": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "description": "Generic categories used to build Tier 0 research queries.",
+          "x-privacy": "public"
+        },
+        "geographic_markets": {
+          "type": "array",
+          "maxItems": 100,
+          "items": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "x-privacy": "public"
+        }
+      }
+    },
+
+    "reporting": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "How results are presented.",
+      "properties": {
+        "fiscal_year_start": {
+          "type": "string",
+          "pattern": "^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
+          "description": "MM-DD.",
+          "x-privacy": "public"
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$",
+          "description": "ISO 4217.",
+          "x-privacy": "public"
+        },
+        "number_format": { "type": "string", "x-vocabulary": "number_format", "x-privacy": "public" },
+        "date_format": { "type": "string", "x-vocabulary": "date_format", "x-privacy": "public" },
+        "reporting_period": { "type": "string", "x-vocabulary": "reporting_period", "x-privacy": "public" },
+        "output_preferences": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "directory": { "type": "string", "maxLength": 500 },
+            "include_charts_data": { "type": "boolean" },
+            "executive_summary_first": { "type": "boolean" }
+          },
+          "x-privacy": "internal"
+        }
+      }
+    },
+
+    "analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "How analysis behaves for this business.",
+      "properties": {
+        "kpi_overrides": {
+          "type": "object",
+          "description": "Per-KPI definition overrides, keyed by KPI id. The registry that consumes these arrives in Milestone 5.",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "definition": { "type": "string", "maxLength": 1000 },
+              "enabled": { "type": "boolean" },
+              "target": { "type": "number" }
+            }
+          },
+          "x-privacy": "internal"
+        },
+        "materiality": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Overrides the shipped materiality defaults.",
+          "properties": {
+            "absolute_amount": { "type": "number", "minimum": 0 },
+            "percentage": { "type": "number", "minimum": 0, "maximum": 100 },
+            "kpi_deviation": { "type": "number", "minimum": 0, "maximum": 100 },
+            "revenue_percentage": { "type": "number", "minimum": 0, "maximum": 100 },
+            "margin_percentage_points": { "type": "number", "minimum": 0, "maximum": 100 }
+          },
+          "x-privacy": "internal"
+        },
+        "terminology": {
+          "type": "object",
+          "description": "Business-specific vocabulary, e.g. {\"bookings\": \"signed contract value before delivery\"}.",
+          "additionalProperties": { "type": "string", "maxLength": 500 },
+          "x-privacy": "internal"
+        }
+      }
+    },
+
+    "notes": {
+      "type": "string",
+      "maxLength": 5000,
+      "description": "Free-text user-approved context.",
+      "x-privacy": "internal"
+    }
+  }
+}

@@ -1,0 +1,71 @@
+# BusinessOps M13.2 eval case. Schema bops-eval-case/2: docs/testing/eval-suite.md.
+# Dual layer (ADR-0044): the platform reads schema_version, name, execution and graders;
+# every other key is the BusinessOps semantic layer, which its loader strips.
+# Authored and statically validated only. Not executed (ADR-0039 E.1, F.1).
+schema: bops-eval-case/2
+schema_version: '1.0'
+name: r20-near-miss-bops-industry-research
+platform_status: loadable
+id: r20-near-miss-bops-industry-research
+suite: routing
+purpose: 'Near-miss routing on a top-three D2 skill-tier overlap pair (bops-industry-research / bops-market-analysis): bops-industry-research fires and bops-market-analysis does not (ADR-0039 E.3).'
+routing_kind: near-miss
+overlap_source: M13-MEAS-D2
+overlap_tier: skill
+overlap_pair: 'bops-industry-research / bops-market-analysis'
+competing_component: bops-market-analysis
+coverage_rows:
+  - S3-12
+components:
+  - skills/bops-industry-research/SKILL.md
+  - skills/bops-market-analysis/SKILL.md
+requires_business_file: false
+inputs: []
+fixture: none
+prompt: |
+  How is the cold chain logistics industry structured? Who takes part at each stage of its value chain, and how large do published sources say it is?
+execution:
+  prompt: |
+    How is the cold chain logistics industry structured? Who takes part at each stage of its value chain, and how large do published sources say it is?
+expected_property: 'bops-industry-research fires and bops-market-analysis does not.'
+safety:
+  - synthetic-data-only
+  - no-web
+  - no-mcp-tool
+  - no-authentication
+  - no-connector
+  - no-publish
+tool_grants:
+  - engine-python
+ablation: with-without
+evidence_class: execution_unavailable
+evidence_reason: 'M13.2 closing evaluation, invocation --case r* --ablation with-without (evals/results/2026-09-25T03-59-34-333Z): execution_unavailable; runs: r1 not admissible (session limit), r2 not admissible (session limit), r3 not admissible (session limit); 0 of 3 admissible; unavailable because of the session limit, not a pass and not a failure; without-plugin arm: 0 of 3 admissible'
+graders:
+  - type: tool_used
+    name: g-intended-fired
+    tool: 'Skill'
+    input_match: '"skill":"businessops:(?:bops-industry-research|industry-research)"'
+  - type: tool_used
+    name: g-competing-silent
+    tool: 'Skill'
+    input_match: '"skill":"businessops:(?:bops-market-analysis|market-analysis)"'
+    min: 0
+    max: 0
+    arm: both
+bops_graders:
+  - id: 'g-intended-fired'
+    kind: 'deterministic'
+    check: 'skill_invoked'
+    skill: 'bops-industry-research'
+    property: 'The intended skill fired.'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-intended-fired'
+  - id: 'g-competing-silent'
+    kind: 'deterministic'
+    check: 'skill_not_invoked'
+    skill: 'bops-market-analysis'
+    property: 'The overlapping skill did not fire.'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-competing-silent'

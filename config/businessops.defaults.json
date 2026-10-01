@@ -1,0 +1,73 @@
+{
+  "$comment": "Shipped defaults — the lowest layer of the precedence chain (architecture.md section 14). Business Context overrides these. NEVER put secrets here.",
+  "schema_version": "1.0.0",
+  "locale": {
+    "currency": "USD",
+    "number_format": "1,234.56",
+    "date_format": "YYYY-MM-DD",
+    "fiscal_year_start": "01-01"
+  },
+  "materiality": {
+    "absolute_amount": 10000,
+    "percentage": 5.0,
+    "kpi_deviation": 10.0,
+    "revenue_percentage": 1.0,
+    "margin_percentage_points": 2.0
+  },
+  "analytics": {
+    "top_n": 5,
+    "concentration_ratios": [
+      1,
+      3,
+      5,
+      10
+    ],
+    "min_cohort_periods": 3,
+    "presentation": "local"
+  },
+  "quality": {
+    "halt_on": "CRITICAL",
+    "max_missing_pct": 5.0,
+    "duplicate_tolerance": 0,
+    "max_duplicate_pct": 5.0,
+    "max_invalid_pct": 10.0,
+    "negative_tolerance_pct": 5.0,
+    "max_period_gap_pct": 20.0,
+    "min_periods": 2,
+    "outlier_ratio": 1000.0,
+    "outlier_min_sample": 30
+  },
+  "forecast": {
+    "min_history_periods": 12,
+    "default_horizon_periods": 6,
+    "scenarios": [
+      "base",
+      "upside",
+      "downside"
+    ]
+  },
+  "anomaly": {
+    "sensitivity": "medium",
+    "min_baseline_periods": 6
+  },
+  "research": {
+    "staleness_days": {
+      "financials": 365,
+      "market_sizing": 730,
+      "positioning": 545
+    },
+    "min_tier_for_material_claim": "B",
+    "disclosure": {
+      "k_anonymity_floor": 5,
+      "default_tier": 0
+    }
+  },
+  "runtime": {
+    "xlsx_reader": "auto",
+    "allow_bootstrap": "ask",
+    "openpyxl_pin": "openpyxl==3.1.5"
+  },
+  "output": {
+    "directory": "./businessops-output"
+  }
+}

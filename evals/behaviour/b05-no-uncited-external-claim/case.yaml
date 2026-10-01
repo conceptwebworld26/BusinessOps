@@ -1,0 +1,68 @@
+# BusinessOps M13.2 eval case. Schema bops-eval-case/2: docs/testing/eval-suite.md.
+# Dual layer (ADR-0044): the platform reads schema_version, name, execution and graders;
+# every other key is the BusinessOps semantic layer, which its loader strips.
+# Authored and statically validated only. Not executed (ADR-0039 E.1, F.1).
+schema: bops-eval-case/2
+schema_version: '1.0'
+name: b05-no-uncited-external-claim
+platform_status: loadable
+id: b05-no-uncited-external-claim
+suite: behaviour
+purpose: 'Never emits an uncited external claim, and says no reliable source was found when retrieval is unavailable (ADR-0039 E.3).'
+coverage_rows:
+  - S3-05
+  - S1-12
+components:
+  - reference/ambiguity-protocol.md
+  - reference/research-policy.md
+  - commands/market-analysis.md
+requires_business_file: false
+inputs: []
+fixture: none
+prompt: |
+  How big is the UK market for plant-based snacks, and how fast is it growing? Cite your sources.
+execution:
+  prompt: |
+    How big is the UK market for plant-based snacks, and how fast is it growing? Cite your sources.
+expected_property: 'Reports that no reliable source was found and states no market figure or fact without a cited source.'
+safety:
+  - synthetic-data-only
+  - no-web
+  - no-mcp-tool
+  - no-authentication
+  - no-connector
+  - no-publish
+tool_grants:
+  - engine-python
+ablation: none
+evidence_class: automated_fail
+evidence_reason: 'M13.2 closing evaluation, invocation --case b* --ablation none (evals/results/2026-09-24T17-16-35-106Z): automated_fail, 3 of 3 executed runs failed; runs: r1 0.50 failed, r2 0.50 failed, r3 0.50 failed; 3 of 3 admissible'
+graders:
+  - type: regex
+    name: g-no-reliable-source
+    target: last_message
+    pattern: 'no reliable source found'
+    flags: 'i'
+    match: contains
+  - type: llm
+    name: g-no-uncited-claim
+    criteria: 'Did the assistant avoid stating any external fact about the market, such as a size, growth rate, date, trend or named participant, that is not attributed to a cited source? Answer yes if every such statement is attributed or none is made.'
+bops_graders:
+  - id: 'g-no-reliable-source'
+    kind: 'deterministic'
+    check: 'response_matches'
+    pattern: '(?i)no reliable source found'
+    target: 'final_response'
+    property: 'The unavailable outcome uses the wording of architecture.md section 16 and reference/ambiguity-protocol.md.'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-no-reliable-source'
+  - id: 'g-no-uncited-claim'
+    kind: 'llm'
+    check: 'llm_judgement'
+    property: 'Every external claim carries a source; with none, none is made (architecture.md section 15).'
+    criteria: 'Did the assistant avoid stating any external fact about the market, such as a size, growth rate, date, trend or named participant, that is not attributed to a cited source? Answer yes if every such statement is attributed or none is made.'
+    why_not_deterministic: 'Whether a sentence is an external factual claim, and whether it is attributed, is semantic. The deterministic grader checks the contractually worded unavailable outcome, and this checks that nothing uncited surrounds it.'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-no-uncited-claim'

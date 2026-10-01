@@ -1,0 +1,42 @@
+BusinessOps M4A — package rebuild, strict validation and MCP verification
+Captured: 2026-09-30 23:13:30 +0530 on native Windows with Git for Windows; Claude Code 2.1.285 (Claude Code)
+Absolute paths are shown as <repo>.
+
+$ python scripts/build_distribution.py
+{
+  "package": "<repo>\\dist\\businessops",
+  "files": 188,
+  "bytes": 2645712,
+  "problems": []
+}
+
+$ claude plugin validate dist/businessops --strict
+Validating marketplace manifest: <repo>\dist\businessops\.claude-plugin\marketplace.json
+
+✔ Validation passed
+exit status: 0
+
+$ claude plugin validate dist/businessops/.claude-plugin/plugin.json --strict
+Validating plugin manifest: <repo>\dist\businessops\.claude-plugin\plugin.json
+
+✔ Validation passed
+exit status: 0
+
+--- package checks ---
+files: 188
+bytes: 2645712
+symlinks: 0
+files over 262144 bytes: 0
+binary files: 0
+${CLAUDE_PLUGIN_ROOT}/reference/ tokens: 76; missing targets: 0; relative reference mentions: 0
+.mcp.json identical to the repository copy: yes
+developer/history/test/eval paths: 0
+personal machine paths: 0
+guard source in package carries the R11/R12 changes: 2 _WINDOWS lines; CLAUDE.md in guard messages: 0
+
+--- MCP from the package, production form (sh <package>/lib/bops_run.sh --verifier) ---
+$ claude --plugin-dir dist/businessops mcp list  (plugin line)
+plugin:businessops:bops-verifier: sh <repo>/dist/businessops/lib/bops_run.sh --verifier - ✔ Connected
+initialize -> {'name': 'bops-verifier', 'version': '1.0.0'}
+tools/list -> ['recompute'] | annotations {'title': 'Recompute a BusinessOps verification request', 'readOnlyHint': False, 'destructiveHint': False, 'openWorldHint': False}
+tools/call -> isError=False status=failed error_code=request_not_found

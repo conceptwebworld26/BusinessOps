@@ -1,0 +1,55 @@
+# BusinessOps M13.2 eval case. Schema bops-eval-case/2: docs/testing/eval-suite.md.
+# Dual layer (ADR-0044): the platform reads schema_version, name, execution and graders;
+# every other key is the BusinessOps semantic layer, which its loader strips.
+# Authored and statically validated only. Not executed (ADR-0039 E.1, F.1).
+schema: bops-eval-case/2
+schema_version: '1.0'
+name: r05-positive-bops-customer-intelligence
+platform_status: loadable
+id: r05-positive-bops-customer-intelligence
+suite: routing
+purpose: 'Positive routing: a request squarely within bops-customer-intelligence fires that skill (ADR-0039 E.3).'
+routing_kind: positive
+coverage_rows:
+  - S3-12
+components:
+  - skills/bops-customer-intelligence/SKILL.md
+requires_business_file: true
+inputs:
+  - assets/demo-data/northwind_sales.csv
+fixture: none
+prompt: |
+  Using assets/demo-data/northwind_sales.csv, which customers are we losing, and how concentrated is our revenue across customers?
+execution:
+  max_turns: 20
+  prompt: |
+    Using assets/demo-data/northwind_sales.csv, which customers are we losing, and how concentrated is our revenue across customers?
+context:
+  scaffold_script: scaffold.sh
+expected_property: 'The skill bops-customer-intelligence fires.'
+safety:
+  - synthetic-data-only
+  - no-web
+  - no-mcp-tool
+  - no-authentication
+  - no-connector
+  - no-publish
+tool_grants:
+  - engine-python
+ablation: with-without
+evidence_class: automated_pass
+evidence_reason: 'M13.2 closing evaluation, invocation --case r* --ablation with-without (evals/results/2026-09-25T03-59-34-333Z): automated_pass, all 3 runs executed and passed; runs: r1 1.00 passed, r2 1.00 passed, r3 1.00 passed; 3 of 3 admissible; without-plugin arm: 3 of 3 admissible, all scored 0'
+graders:
+  - type: tool_used
+    name: g-skill-fired
+    tool: 'Skill'
+    input_match: '"skill":"businessops:(?:bops-customer-intelligence|customer-analysis)"'
+bops_graders:
+  - id: 'g-skill-fired'
+    kind: 'deterministic'
+    check: 'skill_invoked'
+    skill: 'bops-customer-intelligence'
+    property: 'The intended skill fired: the ablation''s plugin-fired indicator (ADR-0039 F.8).'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-skill-fired'

@@ -1,0 +1,43 @@
+BusinessOps M3.1 — installed-package reference-path test (live Claude Code sessions)
+Sessions ran on 2026-09-30 (19:20-19:28 +0530), Claude Code 2.1.285, native Windows with Git for Windows.
+Setup: the built package was copied to <scratch>/m31/installed/businessops (outside the development repository)
+and loaded with `claude -p ... --plugin-dir <that copy>`; each session ran from <scratch>/m31/userproj, a folder
+outside any git repository containing only the demo CSV. <scratch> is Claude Code's session scratch directory;
+path separators are normalised to '/'. Extracted from the sessions' stream-json logs; the logs were then deleted.
+
+== run_bh: BEFORE fix - natural run: /businessops:business-health northwind_sales.csv (tools: Read, Glob, Grep, Bash(sh:*))
+  Bash command: ls -la; ls .businessops 2>/dev/null; head -5 northwind_sales.csv 2>/dev/null
+    -> ERROR: PreToolUse:Bash hook error: BusinessOps write guard blocked this Bash call before it ran. Nothing was written or changed.
+  Glob {"pattern": "**/*"}
+    -> ok: northwind_sales.csv
+  Bash command: sh "<scratch>/m31/installed/businessops/lib/bops_run.sh" -c "
+    -> ok: STATUS: ok
+  Bash command: sh "<scratch>/m31/installed/businessops/lib/bops_run.sh" -c "
+    -> ERROR: PreToolUse:Bash hook error: BusinessOps write guard blocked this Bash call before it ran. Nothing was written or changed.
+  session result: success, 5 turns
+
+== run_cmd: BEFORE fix - directed: the command's own instruction 'Read reference/analysis-framework.md' (Read, Glob, Grep)
+  Read file_path: <scratch>/m31/userproj/reference/analysis-framework.md
+    -> ERROR: File does not exist. Note: your current working directory is <scratch>/m31/userproj.
+  session result: success, 2 turns
+
+== run_skill: BEFORE fix - directed: skill bops-competitor-analysis, 'following reference/ambiguity-protocol.md' (Read, Glob, Grep, Skill)
+  platform text: Base directory for this skill: <scratch>/m31/installed/businessops/skills/bops-competitor-analysis
+  Skill {"skill": "businessops:bops-competitor-analysis"}
+    -> ok: Launching skill: businessops:bops-competitor-analysis
+  Read file_path: <scratch>/m31/installed/businessops/skills/bops-competitor-analysis/reference/ambiguity-protocol.md
+    -> ERROR: File does not exist. Note: your current working directory is <scratch>/m31/userproj.
+  session result: success, 4 turns
+
+== fix_cmd: AFTER fix (${CLAUDE_PLUGIN_ROOT}/reference/...): directed command test on the rebuilt package
+  Read file_path: <scratch>/m31/installed/businessops/reference/analysis-framework.md
+    -> ok: 1	# Reference — Analysis Framework
+  session result: success, 2 turns
+
+== fix_skill: AFTER fix: directed skill test on the rebuilt package
+  platform text: Base directory for this skill: <scratch>/m31/installed/businessops/skills/bops-competitor-analysis
+  Skill {"skill": "businessops:bops-competitor-analysis"}
+    -> ok: Launching skill: businessops:bops-competitor-analysis
+  Read file_path: <scratch>/m31/installed/businessops/reference/ambiguity-protocol.md
+    -> ok: 1	# Reference — Ambiguity Protocol
+  session result: success, 4 turns

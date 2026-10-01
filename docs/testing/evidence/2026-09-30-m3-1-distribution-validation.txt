@@ -1,0 +1,43 @@
+BusinessOps M3.1 — distribution validation evidence
+Captured: 2026-09-30 19:58:17 +0530 on native Windows with Git for Windows; Claude Code 2.1.285 (Claude Code)
+Absolute paths are shown as <repo> (the development repository root).
+
+$ python scripts/build_distribution.py
+{
+  "package": "<repo>\\dist\\businessops",
+  "files": 188,
+  "bytes": 2644601,
+  "problems": []
+}
+
+$ claude plugin validate dist/businessops --strict
+Validating marketplace manifest: <repo>\dist\businessops\.claude-plugin\marketplace.json
+
+✔ Validation passed
+exit status: 0
+
+$ claude plugin validate dist/businessops/.claude-plugin/plugin.json --strict
+Validating plugin manifest: <repo>\dist\businessops\.claude-plugin\plugin.json
+
+✔ Validation passed
+exit status: 0
+
+--- package checks (independent of the build script) ---
+files: 188
+bytes: 2644601
+symlinks: 0
+files over 256 KiB (262144 bytes): 0
+binary files (file --mime charset=binary): 0
+plugin root: dist/businessops/.claude-plugin/plugin.json present
+${CLAUDE_PLUGIN_ROOT}/reference/ tokens: 76
+distinct reference targets missing from package: 0
+relative `reference/...` mentions in commands/skills/agents: 0
+developer/history/test/eval paths: 0
+personal machine paths (the developer's user-profile or home paths): 0
+top level: .claude-plugin .mcp.json agents assets commands config CONNECTORS.md EULA.md hooks lib LICENSE PRIVACY.md README.md reference skills 
+largest files:
+  244323 assets/demo-data/northwind_sales.csv
+  99969 lib/python/bops/verification.py
+  76059 lib/schemas/executive_report.schema.json
+  49251 lib/python/bops/synthesis/synthesis_set.py
+  49169 lib/python/bops/decision_support.py

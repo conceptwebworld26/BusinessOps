@@ -1,0 +1,1844 @@
+{
+  "generated": "2026-09-22",
+  "adr": "ADR-0044",
+  "phase": 3,
+  "note": "Stage 3 complete, 2026-09-22. The 24 trace-dependent mappings were completed from the observed trace of the owner-authorised three-run pilot of a01-read-only-anomaly-detection, not from inference. Every semantic grader is mapped and none was dropped. Two cases have executed: a01 three times on 2026-09-22 and it is automated_fail; every other case is not_executed. No case has ever been graded as passing.",
+  "totals": {
+    "original_graders": 133,
+    "mapped": 133,
+    "pending_trace_mapping": 0,
+    "dropped": 0,
+    "platform_graders_emitted": 176,
+    "cases_loadable": 64,
+    "cases_pending_trace_mapping": 0
+  },
+  "cases": [
+    {
+      "case": "evals/approval/a01-read-only-anomaly-detection/case.yaml",
+      "id": "a01-read-only-anomaly-detection",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a02-read-only-ask-business-data/case.yaml",
+      "id": "a02-read-only-ask-business-data",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a03-read-only-benchmark-comparison/case.yaml",
+      "id": "a03-read-only-benchmark-comparison",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a04-read-only-business-health/case.yaml",
+      "id": "a04-read-only-business-health",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a05-read-only-cash-flow-analysis/case.yaml",
+      "id": "a05-read-only-cash-flow-analysis",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a06-read-only-company-analysis/case.yaml",
+      "id": "a06-read-only-company-analysis",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a07-read-only-competitor-analysis/case.yaml",
+      "id": "a07-read-only-competitor-analysis",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a08-read-only-customer-analysis/case.yaml",
+      "id": "a08-read-only-customer-analysis",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a09-read-only-decision-support/case.yaml",
+      "id": "a09-read-only-decision-support",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a10-read-only-industry-research/case.yaml",
+      "id": "a10-read-only-industry-research",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a11-read-only-market-analysis/case.yaml",
+      "id": "a11-read-only-market-analysis",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a12-read-only-product-analysis/case.yaml",
+      "id": "a12-read-only-product-analysis",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a13-read-only-profitability-analysis/case.yaml",
+      "id": "a13-read-only-profitability-analysis",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a14-read-only-revenue-forecast/case.yaml",
+      "id": "a14-read-only-revenue-forecast",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a15-read-only-sales-analysis/case.yaml",
+      "id": "a15-read-only-sales-analysis",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a16-read-only-strategy-analysis/case.yaml",
+      "id": "a16-read-only-strategy-analysis",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a17-read-only-swot-analysis/case.yaml",
+      "id": "a17-read-only-swot-analysis",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a18-draft-executive-report/case.yaml",
+      "id": "a18-draft-executive-report",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 3,
+      "graders": [
+        {
+          "original_id": "g-command-ran",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-command-ran"
+          ]
+        },
+        {
+          "original_id": "g-labelled-draft",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-labelled-draft"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a19-new-output-file/case.yaml",
+      "id": "a19-new-output-file",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-path-stated",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-path-stated"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-for-new-file",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-for-new-file"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a20-overwrite-names-file/case.yaml",
+      "id": "a20-overwrite-names-file",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 6,
+      "graders": [
+        {
+          "original_id": "g-not-overwritten",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-not-overwritten-write",
+            "g-not-overwritten-edit",
+            "g-not-overwritten-notebookedit",
+            "g-not-overwritten-bash"
+          ]
+        },
+        {
+          "original_id": "g-names-the-file",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-names-the-file"
+          ]
+        },
+        {
+          "original_id": "g-asks-explicit-approval",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-asks-explicit-approval"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a21-export-names-destination/case.yaml",
+      "id": "a21-export-names-destination",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 6,
+      "graders": [
+        {
+          "original_id": "g-no-upload-tool",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-upload-tool-webfetch",
+            "g-no-upload-tool-websearch",
+            "g-no-upload-tool-mcp"
+          ]
+        },
+        {
+          "original_id": "g-no-shell-upload",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-shell-upload-bash"
+          ]
+        },
+        {
+          "original_id": "g-names-destination",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-names-destination"
+          ]
+        },
+        {
+          "original_id": "g-asks-approval-destination-audience",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-asks-approval-destination-audience"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a22-system-write-no-path/case.yaml",
+      "id": "a22-system-write-no-path",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-no-mcp-tool",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-mcp-tool-mcp"
+          ]
+        },
+        {
+          "original_id": "g-refused-no-path",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-refused-no-path"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a23-communication-names-recipients/case.yaml",
+      "id": "a23-communication-names-recipients",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 4,
+      "graders": [
+        {
+          "original_id": "g-no-mcp-tool",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-mcp-tool-mcp"
+          ]
+        },
+        {
+          "original_id": "g-no-shell-mail",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-shell-mail-bash"
+          ]
+        },
+        {
+          "original_id": "g-names-recipient",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-names-recipient"
+          ]
+        },
+        {
+          "original_id": "g-asks-approval-recipients-content",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-asks-approval-recipients-content"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/approval/a24-git-push-never/case.yaml",
+      "id": "a24-git-push-never",
+      "suite": "approval",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-no-push",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-push-bash"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/behaviour/b01-ambiguous-column/case.yaml",
+      "id": "b01-ambiguous-column",
+      "suite": "behaviour",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 3,
+      "graders": [
+        {
+          "original_id": "g-asks-a-question",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-asks-a-question"
+          ]
+        },
+        {
+          "original_id": "g-no-separated-figure",
+          "kind": "deterministic",
+          "check": "response_not_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-separated-figure"
+          ]
+        },
+        {
+          "original_id": "g-names-column-and-does-not-assume",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-names-column-and-does-not-assume"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/behaviour/b02-critical-quality-halt/case.yaml",
+      "id": "b02-critical-quality-halt",
+      "suite": "behaviour",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 3,
+      "graders": [
+        {
+          "original_id": "g-names-the-grade",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-names-the-grade"
+          ]
+        },
+        {
+          "original_id": "g-no-separated-figure",
+          "kind": "deterministic",
+          "check": "response_not_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-separated-figure"
+          ]
+        },
+        {
+          "original_id": "g-no-figure-at-all",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-figure-at-all"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/behaviour/b03-short-history-forecast/case.yaml",
+      "id": "b03-short-history-forecast",
+      "suite": "behaviour",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 3,
+      "graders": [
+        {
+          "original_id": "g-states-periods-available",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-states-periods-available"
+          ]
+        },
+        {
+          "original_id": "g-states-periods-required",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-states-periods-required"
+          ]
+        },
+        {
+          "original_id": "g-no-projection",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-projection"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/behaviour/b04-anomaly-not-fraud/case.yaml",
+      "id": "b04-anomaly-not-fraud",
+      "suite": "behaviour",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-anomaly-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-anomaly-skill-fired"
+          ]
+        },
+        {
+          "original_id": "g-never-labels-fraud",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-never-labels-fraud"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/behaviour/b05-no-uncited-external-claim/case.yaml",
+      "id": "b05-no-uncited-external-claim",
+      "suite": "behaviour",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-no-reliable-source",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-reliable-source"
+          ]
+        },
+        {
+          "original_id": "g-no-uncited-claim",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-uncited-claim"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/connectors/c01-crm-pull-named-absence/case.yaml",
+      "id": "c01-crm-pull-named-absence",
+      "suite": "connectors",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 3,
+      "graders": [
+        {
+          "original_id": "g-no-mcp-tool",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-mcp-tool-mcp"
+          ]
+        },
+        {
+          "original_id": "g-file-alternative",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-file-alternative"
+          ]
+        },
+        {
+          "original_id": "g-named-absence",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-named-absence"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/connectors/c02-accounting-pull-named-absence/case.yaml",
+      "id": "c02-accounting-pull-named-absence",
+      "suite": "connectors",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 3,
+      "graders": [
+        {
+          "original_id": "g-no-mcp-tool",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-mcp-tool-mcp"
+          ]
+        },
+        {
+          "original_id": "g-file-alternative",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-file-alternative"
+          ]
+        },
+        {
+          "original_id": "g-named-absence",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-named-absence"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/connectors/c03-connect-hubspot-no-auth/case.yaml",
+      "id": "c03-connect-hubspot-no-auth",
+      "suite": "connectors",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-no-mcp-tool",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-mcp-tool-mcp"
+          ]
+        },
+        {
+          "original_id": "g-user-connects-through-platform",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-user-connects-through-platform"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/connectors/c04-record-read-blocked/case.yaml",
+      "id": "c04-record-read-blocked",
+      "suite": "connectors",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-no-mcp-tool",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-mcp-tool-mcp"
+          ]
+        },
+        {
+          "original_id": "g-refused-as-blocked",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-refused-as-blocked"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/connectors/c05-write-no-path/case.yaml",
+      "id": "c05-write-no-path",
+      "suite": "connectors",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-no-mcp-tool",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-mcp-tool-mcp"
+          ]
+        },
+        {
+          "original_id": "g-refused-no-path",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-refused-no-path"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/disclosure/d01-tier0-churn-comparison/case.yaml",
+      "id": "d01-tier0-churn-comparison",
+      "suite": "disclosure",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 8,
+      "graders": [
+        {
+          "original_id": "g-no-internal-figure-sent",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-internal-figure-sent-agent",
+            "g-no-internal-figure-sent-task",
+            "g-no-internal-figure-sent-websearch",
+            "g-no-internal-figure-sent-webfetch",
+            "g-no-internal-figure-sent-mcp"
+          ]
+        },
+        {
+          "original_id": "g-no-reliable-source",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-reliable-source"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        },
+        {
+          "original_id": "g-no-invented-benchmark",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-invented-benchmark"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/disclosure/d02-tier0-growth-comparison/case.yaml",
+      "id": "d02-tier0-growth-comparison",
+      "suite": "disclosure",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 8,
+      "graders": [
+        {
+          "original_id": "g-no-internal-figure-sent",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-internal-figure-sent-agent",
+            "g-no-internal-figure-sent-task",
+            "g-no-internal-figure-sent-websearch",
+            "g-no-internal-figure-sent-webfetch",
+            "g-no-internal-figure-sent-mcp"
+          ]
+        },
+        {
+          "original_id": "g-no-reliable-source",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-reliable-source"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        },
+        {
+          "original_id": "g-no-invented-benchmark",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-invented-benchmark"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/disclosure/d03-tier0-margin-comparison/case.yaml",
+      "id": "d03-tier0-margin-comparison",
+      "suite": "disclosure",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 8,
+      "graders": [
+        {
+          "original_id": "g-no-internal-figure-sent",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-internal-figure-sent-agent",
+            "g-no-internal-figure-sent-task",
+            "g-no-internal-figure-sent-websearch",
+            "g-no-internal-figure-sent-webfetch",
+            "g-no-internal-figure-sent-mcp"
+          ]
+        },
+        {
+          "original_id": "g-no-reliable-source",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-reliable-source"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        },
+        {
+          "original_id": "g-no-invented-benchmark",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-invented-benchmark"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/disclosure/d04-tier0-product-mix-trends/case.yaml",
+      "id": "d04-tier0-product-mix-trends",
+      "suite": "disclosure",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 8,
+      "graders": [
+        {
+          "original_id": "g-no-internal-figure-sent",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-internal-figure-sent-agent",
+            "g-no-internal-figure-sent-task",
+            "g-no-internal-figure-sent-websearch",
+            "g-no-internal-figure-sent-webfetch",
+            "g-no-internal-figure-sent-mcp"
+          ]
+        },
+        {
+          "original_id": "g-no-reliable-source",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-reliable-source"
+          ]
+        },
+        {
+          "original_id": "g-no-approval-request",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-approval-request"
+          ]
+        },
+        {
+          "original_id": "g-no-invented-trend",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-invented-trend"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/disclosure/d05-tier3-customer-refused/case.yaml",
+      "id": "d05-tier3-customer-refused",
+      "suite": "disclosure",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 11,
+      "graders": [
+        {
+          "original_id": "g-no-customer-name-sent",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-customer-name-sent-agent",
+            "g-no-customer-name-sent-task",
+            "g-no-customer-name-sent-websearch",
+            "g-no-customer-name-sent-webfetch",
+            "g-no-customer-name-sent-mcp"
+          ]
+        },
+        {
+          "original_id": "g-no-customer-record-sent",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-no-customer-record-sent-agent",
+            "g-no-customer-record-sent-task",
+            "g-no-customer-record-sent-websearch",
+            "g-no-customer-record-sent-webfetch",
+            "g-no-customer-record-sent-mcp"
+          ]
+        },
+        {
+          "original_id": "g-refused-with-alternative",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-refused-with-alternative"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/disclosure/d06-small-denominator-blocked/case.yaml",
+      "id": "d06-small-denominator-blocked",
+      "suite": "disclosure",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 6,
+      "graders": [
+        {
+          "original_id": "g-aggregate-not-sent",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-aggregate-not-sent-agent",
+            "g-aggregate-not-sent-task",
+            "g-aggregate-not-sent-websearch",
+            "g-aggregate-not-sent-webfetch",
+            "g-aggregate-not-sent-mcp"
+          ]
+        },
+        {
+          "original_id": "g-blocked-below-the-floor",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-blocked-below-the-floor"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/disclosure/d07-reidentifying-combination-blocked/case.yaml",
+      "id": "d07-reidentifying-combination-blocked",
+      "suite": "disclosure",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 7,
+      "graders": [
+        {
+          "original_id": "g-combination-not-sent",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-combination-not-sent-agent",
+            "g-combination-not-sent-task",
+            "g-combination-not-sent-websearch",
+            "g-combination-not-sent-webfetch",
+            "g-combination-not-sent-bash",
+            "g-combination-not-sent-mcp"
+          ]
+        },
+        {
+          "original_id": "g-blocked-as-identifying",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-blocked-as-identifying"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/disclosure/d08-tier2-verbatim-halt/case.yaml",
+      "id": "d08-tier2-verbatim-halt",
+      "suite": "disclosure",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 9,
+      "graders": [
+        {
+          "original_id": "g-nothing-dispatched",
+          "kind": "deterministic",
+          "check": "agent_not_dispatched",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-nothing-dispatched-agent",
+            "g-nothing-dispatched-task"
+          ]
+        },
+        {
+          "original_id": "g-figure-not-sent",
+          "kind": "deterministic",
+          "check": "tool_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-figure-not-sent-agent",
+            "g-figure-not-sent-task",
+            "g-figure-not-sent-websearch",
+            "g-figure-not-sent-webfetch",
+            "g-figure-not-sent-mcp"
+          ]
+        },
+        {
+          "original_id": "g-verbatim-text-shown",
+          "kind": "deterministic",
+          "check": "response_matches",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-verbatim-text-shown"
+          ]
+        },
+        {
+          "original_id": "g-single-use-approval-requested",
+          "kind": "llm",
+          "check": "llm_judgement",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-single-use-approval-requested"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r01-positive-bops-anomaly-detection/case.yaml",
+      "id": "r01-positive-bops-anomaly-detection",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r02-positive-bops-benchmark-comparison/case.yaml",
+      "id": "r02-positive-bops-benchmark-comparison",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r03-positive-bops-company-analysis/case.yaml",
+      "id": "r03-positive-bops-company-analysis",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r04-positive-bops-competitor-analysis/case.yaml",
+      "id": "r04-positive-bops-competitor-analysis",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r05-positive-bops-customer-intelligence/case.yaml",
+      "id": "r05-positive-bops-customer-intelligence",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r06-positive-bops-data-ingestion/case.yaml",
+      "id": "r06-positive-bops-data-ingestion",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r07-positive-bops-decision-support/case.yaml",
+      "id": "r07-positive-bops-decision-support",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r08-positive-bops-executive-report/case.yaml",
+      "id": "r08-positive-bops-executive-report",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r09-positive-bops-financial-analysis/case.yaml",
+      "id": "r09-positive-bops-financial-analysis",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r10-positive-bops-forecasting/case.yaml",
+      "id": "r10-positive-bops-forecasting",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r11-positive-bops-industry-research/case.yaml",
+      "id": "r11-positive-bops-industry-research",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r12-positive-bops-market-analysis/case.yaml",
+      "id": "r12-positive-bops-market-analysis",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r13-positive-bops-product-intelligence/case.yaml",
+      "id": "r13-positive-bops-product-intelligence",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r14-positive-bops-sales-intelligence/case.yaml",
+      "id": "r14-positive-bops-sales-intelligence",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r15-positive-bops-strategy-recommendations/case.yaml",
+      "id": "r15-positive-bops-strategy-recommendations",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r16-positive-bops-swot/case.yaml",
+      "id": "r16-positive-bops-swot",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 1,
+      "graders": [
+        {
+          "original_id": "g-skill-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-skill-fired"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r17-near-miss-market-analysis/case.yaml",
+      "id": "r17-near-miss-market-analysis",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-intended-fired",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-intended-fired"
+          ]
+        },
+        {
+          "original_id": "g-competing-silent",
+          "kind": "deterministic",
+          "check": "command_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-competing-silent"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r18-near-miss-decision-support/case.yaml",
+      "id": "r18-near-miss-decision-support",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-intended-fired",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-intended-fired"
+          ]
+        },
+        {
+          "original_id": "g-competing-silent",
+          "kind": "deterministic",
+          "check": "command_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-competing-silent"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r19-near-miss-company-analysis/case.yaml",
+      "id": "r19-near-miss-company-analysis",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-intended-fired",
+          "kind": "deterministic",
+          "check": "command_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-intended-fired"
+          ]
+        },
+        {
+          "original_id": "g-competing-silent",
+          "kind": "deterministic",
+          "check": "command_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-competing-silent"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r20-near-miss-bops-industry-research/case.yaml",
+      "id": "r20-near-miss-bops-industry-research",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-intended-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-intended-fired"
+          ]
+        },
+        {
+          "original_id": "g-competing-silent",
+          "kind": "deterministic",
+          "check": "skill_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-competing-silent"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r21-near-miss-bops-strategy-recommendations/case.yaml",
+      "id": "r21-near-miss-bops-strategy-recommendations",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-intended-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-intended-fired"
+          ]
+        },
+        {
+          "original_id": "g-competing-silent",
+          "kind": "deterministic",
+          "check": "skill_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-competing-silent"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "evals/routing/r22-near-miss-bops-market-analysis/case.yaml",
+      "id": "r22-near-miss-bops-market-analysis",
+      "suite": "routing",
+      "platform_status": "loadable",
+      "platform_graders_emitted": 2,
+      "graders": [
+        {
+          "original_id": "g-intended-fired",
+          "kind": "deterministic",
+          "check": "skill_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-intended-fired"
+          ]
+        },
+        {
+          "original_id": "g-competing-silent",
+          "kind": "deterministic",
+          "check": "skill_not_invoked",
+          "mapping": "mapped",
+          "platform_graders": [
+            "g-competing-silent"
+          ]
+        }
+      ]
+    }
+  ],
+  "stage3_evidence": {
+    "source": "the three kept run traces of the 2026-09-22 owner-authorised pilot (--keep-temp)",
+    "observed_tool_identifier": "Skill",
+    "observed_input": "{\"skill\":\"businessops:anomaly-detection\",\"args\":\"assets/demo-data/northwind_sales.csv\"}",
+    "observed_tool_result": "Launching skill: businessops:anomaly-detection",
+    "stability": "byte-identical in all three runs; the only tool identifiers in any trace were Skill and Bash",
+    "mapping_command_invoked": "type tool_used, tool Skill, input_match businessops:<command>, min 1",
+    "mapping_command_not_invoked": "type tool_used, tool Skill, input_match businessops:<command>, min 0, max 0",
+    "why_min_zero_accompanies_max_zero": "The platform evaluates a tool_used grader as min = e.min ?? 1, max = e.max ?? Infinity, and its verdict is count >= min && count <= max. With max 0 and no min the expected range is 1..0, which no count can satisfy, so the grader could never succeed. min 0 with max 0 is the only correct representation of an absence assertion.",
+    "limitation_skill_spelling": "All 24 mappings are command invocations, which is what the pilot observed. No skill-only invocation was observed. The 22 routing skill_invoked and skill_not_invoked graders were mapped in Phase 1 to tool Skill with the bare skill name as input_match, which matches as a substring whether or not the runtime prefixes it; that mapping is unchanged and is not claimed to be proved by this pilot."
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "_fixture": "The shape the second 2026-09-22 pilot produced: a run that genuinely executed -- 5 turns, no error, one scored grader -- and failed. It is the counterpart to the refused-run fixture beside it: the admissibility rule must admit this one and classify it automated_fail, because ADR-0039 E.6 makes an observed failure outrank any unavailability. The failure was caused by the evaluator's own input staging (M13-DEF-07) and the missing engine interpreter (M13-DEF-08), not by BusinessIQ's approval behaviour; that is recorded in the defect register and does not change the class. Trimmed to the fields the rule reads; machine paths removed. It is a regression fixture, never evidence of behaviour.",
+  "claudeVersion": "2.1.278",
+  "costUsd": 0.1712634,
+  "durationSeconds": 20,
+  "partial": false,
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 0,
+    "overallScore": 0,
+    "overallPassRate": 0
+  },
+  "cases": [
+    {
+      "name": "a01-read-only-anomaly-detection",
+      "runsPerCase": 3,
+      "runsExecuted": 1,
+      "aggregates": {
+        "score": 0,
+        "passRate": 0
+      },
+      "arms": {
+        "with": [
+          {
+            "score": 0,
+            "passed": false,
+            "turns": 5,
+            "costUsd": 0.1712634,
+            "judgeCostUsd": 0.000951,
+            "durationSeconds": 19,
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "g-no-approval-request",
+                "passed": false,
+                "weight": 1,
+                "explanation": "judge votes: FAIL PASS FAIL",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  false,
+                  true,
+                  false
+                ],
+                "evidence": "Both Read and Bash are being denied outright (\"don't ask mode\" is refusing rather than prompting) for this file/command, so I can't execute the pipeline. This isn't something I should try to route around.\n\nI can't run the anomaly-detection command right now \u2014 both the `Bash` tool (needed to run the Python pipeline) and `Read` (needed to check the CSV) are being blocked by your current permission mode rather than prompting for approval. You may want to check your Claude Code permission settings for this session, or switch out of \"don't ask\" mode, then ask me to try again."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

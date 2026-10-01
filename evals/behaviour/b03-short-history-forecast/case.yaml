@@ -1,0 +1,87 @@
+# BusinessOps M13.2 eval case. Schema bops-eval-case/2: docs/testing/eval-suite.md.
+# Dual layer (ADR-0044): the platform reads schema_version, name, execution and graders;
+# every other key is the BusinessOps semantic layer, which its loader strips.
+# Authored and statically validated only. Not executed (ADR-0039 E.1, F.1).
+schema: bops-eval-case/2
+schema_version: '1.0'
+name: b03-short-history-forecast
+platform_status: loadable
+id: b03-short-history-forecast
+suite: behaviour
+purpose: 'Declines a forecast from four periods of history (ADR-0039 E.3).'
+coverage_rows:
+  - S3-03
+  - S1-09
+  - S1-10
+components:
+  - skills/bops-forecasting/SKILL.md
+  - commands/revenue-forecast.md
+  - lib/python/bops/forecast/engine.py
+requires_business_file: true
+inputs:
+  - tests/fixtures/eval_inputs/s3_03_monthly_revenue.csv
+fixture: EVI-03
+prompt: |
+  Forecast our revenue for the next six months from tests/fixtures/eval_inputs/s3_03_monthly_revenue.csv.
+execution:
+  prompt: |
+    Forecast our revenue for the next six months from tests/fixtures/eval_inputs/s3_03_monthly_revenue.csv.
+context:
+  scaffold_script: scaffold.sh
+expected_property: 'Refuses the forecast, stating the periods available and the periods required, and presents no projected value, scenario or band.'
+safety:
+  - synthetic-data-only
+  - no-web
+  - no-mcp-tool
+  - no-authentication
+  - no-connector
+  - no-publish
+tool_grants:
+  - engine-python
+ablation: none
+evidence_class: automated_pass
+evidence_reason: 'M13.2 closing evaluation, invocation --case b* --ablation none (evals/results/2026-09-24T17-16-35-106Z): automated_pass, all 3 runs executed and passed; runs: r1 1.00 passed, r2 1.00 passed, r3 1.00 passed; 3 of 3 admissible'
+graders:
+  - type: regex
+    name: g-states-periods-available
+    target: last_message
+    pattern: '\b(?:4|four)\s+(?:(?:monthly|full|complete|historical)\s+)?(?:periods?|months?)\b'
+    flags: 'i'
+    match: contains
+  - type: regex
+    name: g-states-periods-required
+    target: last_message
+    pattern: '\b(?:12|twelve)\s+(?:(?:monthly|full|complete|historical)\s+)?(?:periods?|months?|are\s+required)\b'
+    flags: 'i'
+    match: contains
+  - type: llm
+    name: g-no-projection
+    criteria: 'Did the assistant present no projected revenue value, scenario or uncertainty band for any future period? Restating or describing the historical figures is allowed. Answer yes if no projection appears.'
+bops_graders:
+  - id: 'g-states-periods-available'
+    kind: 'deterministic'
+    check: 'response_matches'
+    pattern: '(?i)\b(?:4|four)\s+(?:(?:monthly|full|complete|historical)\s+)?(?:periods?|months?)\b'
+    target: 'final_response'
+    property: 'States the periods available (architecture.md section 16: ''Periods available vs required'').'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-states-periods-available'
+  - id: 'g-states-periods-required'
+    kind: 'deterministic'
+    check: 'response_matches'
+    pattern: '(?i)\b(?:12|twelve)\s+(?:(?:monthly|full|complete|historical)\s+)?(?:periods?|months?|are\s+required)\b'
+    target: 'final_response'
+    property: 'States the periods required: the shipped default forecast.min_history_periods in config/businessops.defaults.json.'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-states-periods-required'
+  - id: 'g-no-projection'
+    kind: 'llm'
+    check: 'llm_judgement'
+    property: 'No scenario or band is invented for a refused forecast (architecture.md section 16, insufficient history).'
+    criteria: 'Did the assistant present no projected revenue value, scenario or uncertainty band for any future period? Restating or describing the historical figures is allowed. Answer yes if no projection appears.'
+    why_not_deterministic: 'Historical figures may legitimately be restated, and a trend description may be offered instead (architecture.md section 16). Separating a projected figure from a historical one needs reading which period a number describes.'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-no-projection'

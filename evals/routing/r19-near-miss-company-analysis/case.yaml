@@ -1,0 +1,71 @@
+# BusinessOps M13.2 eval case. Schema bops-eval-case/2: docs/testing/eval-suite.md.
+# Dual layer (ADR-0044): the platform reads schema_version, name, execution and graders;
+# every other key is the BusinessOps semantic layer, which its loader strips.
+# Authored and statically validated only. Not executed (ADR-0039 E.1, F.1).
+schema: bops-eval-case/2
+schema_version: '1.0'
+name: r19-near-miss-company-analysis
+platform_status: loadable
+id: r19-near-miss-company-analysis
+suite: routing
+purpose: 'Near-miss routing on a top-three D2 command-tier overlap pair (company-analysis / market-analysis): company-analysis fires and market-analysis does not (ADR-0039 E.3).'
+routing_kind: near-miss
+overlap_source: M13-MEAS-D2
+overlap_tier: command
+overlap_pair: 'company-analysis / market-analysis'
+competing_component: market-analysis
+coverage_rows:
+  - S3-12
+components:
+  - commands/company-analysis.md
+  - commands/market-analysis.md
+requires_business_file: false
+inputs: []
+fixture: none
+prompt: |
+  What has Example Freight Ltd announced over the past eighteen months, and how does it describe its own position in the refrigerated freight market?
+execution:
+  prompt: |
+    What has Example Freight Ltd announced over the past eighteen months, and how does it describe its own position in the refrigerated freight market?
+expected_property: 'company-analysis fires and market-analysis does not.'
+safety:
+  - synthetic-data-only
+  - no-web
+  - no-mcp-tool
+  - no-authentication
+  - no-connector
+  - no-publish
+tool_grants:
+  - engine-python
+ablation: with-without
+evidence_class: execution_unavailable
+evidence_reason: 'M13.2 closing evaluation, invocation --case r* --ablation with-without (evals/results/2026-09-25T03-59-34-333Z): execution_unavailable; runs: r1 not admissible (session limit), r2 not admissible (session limit), r3 not admissible (session limit); 0 of 3 admissible; unavailable because of the session limit, not a pass and not a failure; without-plugin arm: 0 of 3 admissible'
+graders:
+  - type: tool_used
+    name: g-intended-fired
+    tool: 'Skill'
+    input_match: 'businessops:company-analysis'
+    min: 1
+  - type: tool_used
+    name: g-competing-silent
+    tool: 'Skill'
+    input_match: 'businessops:market-analysis'
+    min: 0
+    max: 0
+bops_graders:
+  - id: 'g-intended-fired'
+    kind: 'deterministic'
+    check: 'command_invoked'
+    command: 'company-analysis'
+    property: 'The intended command fired.'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-intended-fired'
+  - id: 'g-competing-silent'
+    kind: 'deterministic'
+    check: 'command_not_invoked'
+    command: 'market-analysis'
+    property: 'The overlapping command did not fire.'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-competing-silent'

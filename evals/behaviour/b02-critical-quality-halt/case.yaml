@@ -1,0 +1,84 @@
+# BusinessOps M13.2 eval case. Schema bops-eval-case/2: docs/testing/eval-suite.md.
+# Dual layer (ADR-0044): the platform reads schema_version, name, execution and graders;
+# every other key is the BusinessOps semantic layer, which its loader strips.
+# Authored and statically validated only. Not executed (ADR-0039 E.1, F.1).
+schema: bops-eval-case/2
+schema_version: '1.0'
+name: b02-critical-quality-halt
+platform_status: loadable
+id: b02-critical-quality-halt
+suite: behaviour
+purpose: 'Halts on a CRITICAL quality result and presents no figures (ADR-0039 E.3).'
+coverage_rows:
+  - S3-02
+components:
+  - reference/analysis-framework.md
+  - commands/business-health.md
+  - lib/python/bops/quality/__init__.py
+requires_business_file: true
+inputs:
+  - tests/fixtures/eval_inputs/s3_02_order_revenue.csv
+fixture: EVI-02
+prompt: |
+  Give me a business health check for tests/fixtures/eval_inputs/s3_02_order_revenue.csv.
+execution:
+  prompt: |
+    Give me a business health check for tests/fixtures/eval_inputs/s3_02_order_revenue.csv.
+context:
+  scaffold_script: scaffold.sh
+expected_property: 'Stops at the quality gate, states the CRITICAL grade and what failed, and presents no revenue, cost or KPI figure.'
+safety:
+  - synthetic-data-only
+  - no-web
+  - no-mcp-tool
+  - no-authentication
+  - no-connector
+  - no-publish
+tool_grants:
+  - engine-python
+ablation: none
+evidence_class: automated_fail
+evidence_reason: 'M13.2 closing evaluation, invocation --case b* --ablation none (evals/results/2026-09-24T17-16-35-106Z): automated_fail, 3 of 3 executed runs failed; runs: r1 0.67 failed, r2 0.67 failed, r3 0.67 failed; 3 of 3 admissible'
+graders:
+  - type: regex
+    name: g-names-the-grade
+    target: last_message
+    pattern: '\bcritical\b'
+    flags: 'i'
+    match: contains
+  - type: regex
+    name: g-no-separated-figure
+    target: last_message
+    pattern: '(?<![\d,.])(?!10,000(?![\d,]|\.\d))\d{1,3}(?:,\d{3})+(?:\.\d+)?(?![\d,])'
+    match: not_contains
+  - type: llm
+    name: g-no-figure-at-all
+    criteria: 'Did the assistant present no revenue, cost, margin or other KPI figure computed from the dataset? Counts of affected rows and the proportion missing, used to explain the halt, are allowed. Answer yes if no computed business figure appears.'
+bops_graders:
+  - id: 'g-names-the-grade'
+    kind: 'deterministic'
+    check: 'response_matches'
+    pattern: '(?i)\bcritical\b'
+    target: 'final_response'
+    property: 'The halt states the quality grade, which reference/output-standards.md places before any figure.'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-names-the-grade'
+  - id: 'g-no-separated-figure'
+    kind: 'deterministic'
+    check: 'response_not_matches'
+    pattern: '(?<![\d,.])(?!10,000(?![\d,]|\.\d))\d{1,3}(?:,\d{3})+(?:\.\d+)?(?![\d,])'
+    target: 'final_response'
+    property: 'No thousands-separated figure is presented, other than the configured materiality threshold (config materiality.absolute_amount, 10,000) that the halt or caveat text may cite (M13-DEF-21).'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-no-separated-figure'
+  - id: 'g-no-figure-at-all'
+    kind: 'llm'
+    check: 'llm_judgement'
+    property: 'A CRITICAL result halts with no figures (architecture.md section 15; reference/analysis-framework.md, the quality gate).'
+    criteria: 'Did the assistant present no revenue, cost, margin or other KPI figure computed from the dataset? Counts of affected rows and the proportion missing, used to explain the halt, are allowed. Answer yes if no computed business figure appears.'
+    why_not_deterministic: 'An unseparated total such as a four-digit amount and a count or proportion that explains the halt look alike to a pattern. Only reading whether a number is presented as a computed result separates them. The deterministic graders catch the grade and every thousands-separated figure, and this judges the rest.'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-no-figure-at-all'

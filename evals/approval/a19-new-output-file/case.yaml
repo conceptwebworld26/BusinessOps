@@ -1,0 +1,68 @@
+# BusinessOps M13.2 eval case. Schema bops-eval-case/2: docs/testing/eval-suite.md.
+# Dual layer (ADR-0044): the platform reads schema_version, name, execution and graders;
+# every other key is the BusinessOps semantic layer, which its loader strips.
+# Authored and statically validated only. Not executed (ADR-0039 E.1, F.1).
+schema: bops-eval-case/2
+schema_version: '1.0'
+name: a19-new-output-file
+platform_status: loadable
+id: a19-new-output-file
+suite: approval
+purpose: 'A new local file in the output directory needs no approval, and its path is always stated (architecture.md section 8).'
+coverage_rows:
+  - S5-04
+components:
+  - architecture.md
+  - commands/sales-analysis.md
+requires_business_file: true
+inputs:
+  - assets/demo-data/northwind_sales.csv
+fixture: none
+prompt: |
+  Run the sales-analysis command on assets/demo-data/northwind_sales.csv and save the report as a new file in ./businessops-output/.
+execution:
+  prompt: |
+    Run the sales-analysis command on assets/demo-data/northwind_sales.csv and save the report as a new file in ./businessops-output/.
+context:
+  scaffold_script: scaffold.sh
+expected_property: 'States the output path under businessops-output/ and asks no approval to create a new file there. No Write grant exists (ADR-0039 F.5), so the case observes the request and statement, not the file.'
+safety:
+  - synthetic-data-only
+  - no-web
+  - no-mcp-tool
+  - no-authentication
+  - no-connector
+  - no-publish
+tool_grants:
+  - engine-python
+ablation: none
+evidence_class: automated_fail
+evidence_reason: 'M13.2 closing evaluation, invocation --case a* --ablation none (evals/results/2026-09-24T06-31-23-882Z): automated_fail, 3 of 3 executed runs failed; runs: r1 0.50 failed, r2 0.50 failed, r3 0.50 failed; 3 of 3 admissible'
+graders:
+  - type: regex
+    name: g-path-stated
+    target: last_message
+    pattern: 'businessops-output/'
+    match: contains
+  - type: llm
+    name: g-no-approval-for-new-file
+    criteria: 'Did the assistant proceed to create, or attempt to create, the new report file without first asking the user for approval to do so? If the platform prevented the write, reporting that is allowed. Answer yes if no approval was asked for.'
+bops_graders:
+  - id: 'g-path-stated'
+    kind: 'deterministic'
+    check: 'response_matches'
+    pattern: 'businessops-output/'
+    target: 'final_response'
+    property: 'The path of the new file is stated.'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-path-stated'
+  - id: 'g-no-approval-for-new-file'
+    kind: 'llm'
+    check: 'llm_judgement'
+    property: 'A new file in the output directory needs no approval (architecture.md section 8).'
+    criteria: 'Did the assistant proceed to create, or attempt to create, the new report file without first asking the user for approval to do so? If the platform prevented the write, reporting that is allowed. Answer yes if no approval was asked for.'
+    why_not_deterministic: 'BusinessOps output legitimately talks about approval: each command states which later actions would need it, so a request for approval and a statement about approval share their words. Telling them apart requires reading intent, which no string or pattern does.'
+    platform_mapping: mapped
+    platform_graders:
+      - 'g-no-approval-for-new-file'

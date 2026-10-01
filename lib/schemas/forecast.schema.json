@@ -1,0 +1,198 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/conceptwebworld26/BusinessOps/lib/schemas/forecast.schema.json",
+  "title": "BusinessOps Forecast",
+  "description": "One forecast run. Every value here is an estimate about a period that has not happened — evidence class 6 — and the schema is shaped to keep that inseparable from the numbers: a scenario cannot exist without its assumption, a band cannot be reported without its basis, and `statistical_interval` is a required constant false so no consumer can present the band as a confidence interval. A target that could not be forecast appears with its status and reason rather than being omitted.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["forecast_id", "metric", "status"],
+
+  "properties": {
+    "forecast_id": { "type": "string" },
+    "metric": { "type": "string" },
+    "metric_name": { "type": "string" },
+
+    "status": {
+      "description": "available = a forecast was produced; insufficient_data = history too short; unavailable = a required field is absent; not_applicable = meaningless for this business model.",
+      "type": "string",
+      "enum": ["available", "unavailable", "not_applicable", "insufficient_data"]
+    },
+
+    "reason": {
+      "description": "Required whenever status is not 'available'. Names the field or the history that was missing.",
+      "type": ["string", "null"]
+    },
+
+    "evidence_class": {
+      "description": "Always 6 (estimate / assumption). A forecast is never evidential.",
+      "type": "integer",
+      "const": 6
+    },
+
+    "unit": { "enum": ["currency", "percent", "ratio", "count", "days", "percentage_points", null] },
+    "currency": { "type": ["string", "null"] },
+    "frequency": { "type": ["string", "null"], "enum": ["monthly", "unsupported", null] },
+    "depends_on": { "type": "array", "items": { "type": "string" } },
+    "min_history": { "type": ["integer", "null"] },
+
+    "history_periods": { "type": "integer", "minimum": 0 },
+    "historical_period": { "type": ["string", "null"] },
+    "forecast_period": { "type": ["string", "null"] },
+    "horizon": { "type": ["integer", "null"], "minimum": 1 },
+
+    "history": {
+      "description": "The observed series the forecast was built from. Actuals; never merged with the forecast points.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["period", "value"],
+        "properties": {
+          "period": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}$" },
+          "value": { "type": "string" }
+        }
+      }
+    },
+
+    "method": { "type": ["string", "null"] },
+    "method_name": { "type": ["string", "null"] },
+    "method_rationale": {
+      "description": "Why this method was selected — the backtest comparison, or the adequacy fallback.",
+      "type": ["string", "null"]
+    },
+    "parameters": { "type": "object" },
+
+    "scenarios": {
+      "description": "Named views of the future. Each is an assumption plus its arithmetic consequence.",
+      "type": "object",
+      "propertyNames": { "enum": ["base", "upside", "downside"] },
+      "additionalProperties": {
+        "type": "object",
+        "required": ["scenario", "method", "points"],
+        "properties": {
+          "scenario": { "type": "string", "enum": ["base", "upside", "downside"] },
+          "adjustment_pct": { "type": "string" },
+          "method": { "type": "string" },
+          "assumption": { "$ref": "#/definitions/assumption" },
+          "total": { "type": "string" },
+          "caveat": { "type": "string" },
+          "points": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["period", "scenario", "value"],
+              "properties": {
+                "period": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}$" },
+                "scenario": { "type": "string" },
+                "value": { "type": "string" },
+                "low": { "type": "string" },
+                "high": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "assumptions": {
+      "description": "The assumption register required by reference/evidence-ledger.md for class-6 statements.",
+      "type": "array",
+      "items": { "$ref": "#/definitions/assumption" }
+    },
+
+    "uncertainty": {
+      "type": "object",
+      "required": ["kind", "statistical_interval"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["empirical_error_band", "historical_volatility_band", "none"]
+        },
+        "pct": { "type": ["string", "null"] },
+        "basis": {
+          "description": "What the width was measured from. Required whenever a band is present.",
+          "type": ["string", "null"]
+        },
+        "sample_periods": { "type": ["integer", "null"] },
+        "statistical_interval": {
+          "description": "Always false. Nothing in the engine fits a distribution, so no band is a confidence interval.",
+          "type": "boolean",
+          "const": false
+        },
+        "statement": { "type": "string" }
+      }
+    },
+
+    "validation": {
+      "description": "The holdout backtest, or a statement that none was possible.",
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["available", "unavailable", "not_applicable", "insufficient_data"]
+        },
+        "method": { "type": ["string", "null"] },
+        "training_period": { "type": ["string", "null"] },
+        "validation_period": { "type": ["string", "null"] },
+        "training_periods": { "type": ["integer", "null"] },
+        "validation_periods": { "type": ["integer", "null"] },
+        "mape": {
+          "description": "Mean absolute percentage error on the held-out periods. This is the lowest error among every candidate method scored on that same holdout, and the method was selected on it, so it is an optimistic estimate of future error rather than a clean out-of-sample one. It is an empirical measurement, not a statistical confidence level.",
+          "type": ["string", "null"]
+        },
+        "mae": { "type": ["string", "null"] },
+        "reason": { "type": ["string", "null"] },
+        "statement": { "type": "string" },
+        "candidates": {
+          "description": "Every method compared, so the selection is auditable.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "method": { "type": "string" },
+              "mape": { "type": ["string", "null"] },
+              "mae": { "type": ["string", "null"] }
+            }
+          }
+        }
+      }
+    },
+
+    "quality_grade": {
+      "type": ["string", "null"],
+      "enum": ["PASS", "WARNING", "CRITICAL", null]
+    },
+    "provenance": { "type": "object" },
+    "caveats": { "type": "array", "items": { "type": "string" } },
+    "confidence": {
+      "description": "The evidence ledger's qualitative grade (reference/evidence-ledger.md) describing how much weight the estimate deserves given history length, backtest outcome and data quality. It is NOT a probability and NOT the width of the band - `uncertainty.pct` carries that, separately and numerically. Never HIGH: the highest grade is reserved for measured fact.",
+      "type": ["string", "null"],
+      "enum": ["MEDIUM", "LOW", null]
+    },
+    "summary": { "type": "object" }
+  },
+
+  "definitions": {
+    "assumption": {
+      "type": "object",
+      "required": ["assumption_id", "subject", "statement", "evidence_class"],
+      "properties": {
+        "assumption_id": { "type": "string" },
+        "subject": { "type": "string" },
+        "statement": { "type": "string" },
+        "basis": { "type": ["string", "null"] },
+        "scenario": {
+          "type": ["string", "null"],
+          "enum": ["base", "upside", "downside", null]
+        },
+        "direction": { "type": ["string", "null"] },
+        "quantified_pct": { "type": ["string", "null"] },
+        "origin": {
+          "type": "string",
+          "enum": ["derived_from_history", "stated_by_user", "method_property"]
+        },
+        "evidence_class": { "type": "integer", "const": 6 }
+      }
+    }
+  }
+}

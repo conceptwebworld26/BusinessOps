@@ -1,0 +1,60 @@
+# ---------------------------------------------------------------------------
+# Secrets — never commit credentials, tokens or connection strings
+# ---------------------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ---------------------------------------------------------------------------
+# BusinessOps runtime state (architecture.md section 13)
+# Confidential business data and generated artifacts never enter version control.
+# ---------------------------------------------------------------------------
+
+# Project-local Business Context — confidential
+.businessops/
+
+# Generated reports and exports
+businessops-output/
+
+# The managed reader runtime lives at ~/.claude/businessops/runtime/, outside the
+# repository entirely (ADR-0008). Listed only to catch a misplaced local copy.
+businessops-runtime/
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ---------------------------------------------------------------------------
+# Node / build
+# ---------------------------------------------------------------------------
+node_modules/
+dist/
+build/
+.next/
+
+# ---------------------------------------------------------------------------
+# Editors and OS
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+
+# Claude Code's per-machine settings. Only this file: nothing else under .claude/ is ignored.
+.claude/settings.local.json
+
+# ---------------------------------------------------------------------------
+# Test and eval OUTPUT only — the suites and fixtures themselves are tracked
+# ---------------------------------------------------------------------------
+tests/output/
+evals/results/

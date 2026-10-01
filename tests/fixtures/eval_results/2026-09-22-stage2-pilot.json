@@ -1,0 +1,44 @@
+{
+  "_fixture": "The shape the Stage 2 pilot produced on 2026-09-22 (M13-DEF-06): a run the platform refused before its first turn, which the harness scored and reported as a pass. Trimmed to the fields the admissibility rule reads; machine paths removed. It is a regression fixture, never evidence of behaviour.",
+  "claudeVersion": "2.1.278",
+  "costUsd": 0.000543,
+  "durationSeconds": 4,
+  "partial": false,
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 1,
+    "overallScore": 1,
+    "overallPassRate": 1
+  },
+  "cases": [
+    {
+      "name": "a01-read-only-anomaly-detection",
+      "runsPerCase": 3,
+      "aggregates": { "score": 1, "passRate": 1 },
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 0,
+            "costUsd": 0.000543,
+            "judgeCostUsd": 0.000543,
+            "durationSeconds": 3,
+            "error": "exit 1: A shell tool (Bash or PowerShell) was granted but this machine cannot confine it (no sandbox backend on this platform, or it is not installed), so the run was refused rather than run unconfined. Sandbox required but unavailable: sandbox is enabled but the Windows sandbox is not active on this session (feature gate off).",
+            "graders": [
+              {
+                "name": "g-no-approval-request",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "evidence": ""
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

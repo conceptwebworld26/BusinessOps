@@ -1,0 +1,729 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/conceptwebworld26/BusinessOps/lib/schemas/synthesis.schema.json",
+  "title": "BusinessOps Cross-Domain Synthesis",
+  "description": "One auditable set of statements combining internal analysis with external evidence, shaped so that nothing can be promoted on the way through. Each statement declares what kind of statement it is and what it rests on; external material stays untrusted and keeps its own class; candidate claims stay candidate; disagreements are carried whole rather than resolved; limitations accumulate rather than being filtered; and `recommendations` is a reserved array that the synthesis foundation always leaves empty, because a recommendation is class 7 and requires evidence, rationale, expected benefit, risks, dependencies and confidence from a layer that owns the decision.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "trust",
+    "items",
+    "conflicts",
+    "limitations",
+    "confidence",
+    "recommendations"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "synthesis_type": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "subject": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "as_of": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "business_model": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "currency": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "quality_grade": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "trust": {
+      "description": "Always \"untrusted\": external material in this set is data, and BusinessOps has no path that promotes it to instruction, verification or recommendation.",
+      "type": "string",
+      "const": "untrusted"
+    },
+    "trust_statement": {
+      "type": "string"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/item"
+      }
+    },
+    "facts": {
+      "$ref": "#/definitions/id_list"
+    },
+    "calculations": {
+      "$ref": "#/definitions/id_list"
+    },
+    "sourced": {
+      "$ref": "#/definitions/id_list"
+    },
+    "interpretations": {
+      "$ref": "#/definitions/id_list"
+    },
+    "assumptions": {
+      "$ref": "#/definitions/id_list"
+    },
+    "material_findings": {
+      "$ref": "#/definitions/id_list"
+    },
+    "recommendations": {
+      "description": "Reserved for downstream capabilities. The synthesis foundation produces none, so this array is empty; a non-empty array here means something issued advice from a layer that has no decision owner.",
+      "type": "array",
+      "maxItems": 0
+    },
+    "recommendations_status": {
+      "type": "string"
+    },
+    "evidence": {
+      "description": "Contributing evidence sets in instruction-safe form: citation metadata without retrieved content, so an injected sentence has nowhere to sit in assembled context.",
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "candidate_claims": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/candidate_claim"
+      }
+    },
+    "conflicts": {
+      "description": "Disagreements preserved whole. Never averaged, never silently resolved, and never decided by source tier.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/conflict"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/limitation"
+      }
+    },
+    "confidence": {
+      "$ref": "#/definitions/confidence"
+    },
+    "provenance_index": {
+      "type": "object"
+    },
+    "summary": {
+      "type": "object"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "definitions": {
+    "id_list": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "synthesis_id",
+        "kind",
+        "evidence_class",
+        "origin",
+        "domain",
+        "trust",
+        "statement",
+        "provenance"
+      ],
+      "properties": {
+        "synthesis_id": {
+          "type": "string",
+          "pattern": "^sy-[0-9a-f]{12}$"
+        },
+        "kind": {
+          "description": "RECOMMENDATION is deliberately absent: the synthesis foundation does not produce one, and an advisory sentence may not enter as an interpretation instead.",
+          "type": "string",
+          "enum": [
+            "FACT",
+            "CALCULATION",
+            "SOURCED",
+            "INTERPRETATION",
+            "ASSUMPTION"
+          ]
+        },
+        "evidence_class": {
+          "description": "The evidence-ledger provenance class. 1 user data, 4 calculated, 3 externally sourced, 5 interpretation, 6 assumption. Class 7 (recommendation) cannot appear.",
+          "type": "integer",
+          "enum": [
+            1,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "kpi",
+            "sales",
+            "customer",
+            "product",
+            "financial",
+            "forecast",
+            "anomaly",
+            "quality",
+            "company",
+            "market",
+            "competitor",
+            "industry"
+          ]
+        },
+        "domain": {
+          "type": "string",
+          "enum": [
+            "internal",
+            "external"
+          ]
+        },
+        "trust": {
+          "type": "string",
+          "enum": [
+            "internal",
+            "untrusted"
+          ]
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "metric": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "metric_definition": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "period": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "geography": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "currency": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "currency",
+            "percent",
+            "ratio",
+            "count",
+            "days",
+            "percentage_points",
+            null
+          ],
+          "description": "Canonical quantity type (ADR-0025): what kind of quantity this is, never a magnitude, a currency code or a display label."
+        },
+        "scope": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "methodology": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "basis": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "provenance": {
+          "description": "At least one reference. Where provenance genuinely does not exist it is stated as `unavailable` with a reason, never omitted.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/provenance_ref"
+          }
+        },
+        "support": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "supported",
+            "partially_supported",
+            "unsupported",
+            "insufficient_evidence",
+            null
+          ]
+        },
+        "support_detail": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "conflict_refs": {
+          "$ref": "#/definitions/id_list"
+        },
+        "confidence": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            null
+          ]
+        },
+        "confidence_detail": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "materiality": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/limitation"
+          }
+        },
+        "caveats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dimension_provenance": {
+          "type": "array",
+          "description": "Footings in fixed seven-dimension order, never insertion order.",
+          "items": {
+            "$ref": "#/definitions/dimension_provenance"
+          }
+        },
+        "dimension_resolution": {
+          "type": "array",
+          "description": "The admissibility trail: every footing, admitted or refused, with its reason. Re-derived on every add(); never restored from a serialised record.",
+          "items": {
+            "type": "object"
+          }
+        },
+        "resolved_dimensions": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "The dimensions compatibility.compare() may read, after admissibility. Derived, never an input."
+        }
+      },
+      "anyOf": [
+        {
+          "description": "A statement that does not assert something about the business itself: SOURCED is what a public source said, INTERPRETATION a reading, ASSUMPTION something modelled. None requires internal footing.",
+          "properties": {
+            "kind": {
+              "enum": [
+                "SOURCED",
+                "INTERPRETATION",
+                "ASSUMPTION"
+              ]
+            }
+          }
+        },
+        {
+          "description": "An external statement; its footing is the evidence it cites.",
+          "properties": {
+            "domain": {
+              "const": "external"
+            }
+          }
+        },
+        {
+          "description": "An internal FACT or CALCULATION. It reads downstream as 'this is true of us', so its provenance must hold at least one internal reference. Citing only external evidence would label a research house's figure as a class-1 internal fact; the runtime refuses it at add() time and this mirrors that rule for a record that never passed through the object model. See ADR-0023.",
+          "properties": {
+            "provenance": {
+              "type": "array",
+              "contains": {
+                "type": "object",
+                "required": [
+                  "kind"
+                ],
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "dataset",
+                      "calculation",
+                      "kpi",
+                      "finding",
+                      "forecast",
+                      "anomaly"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "provenance_ref": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "dataset",
+            "calculation",
+            "kpi",
+            "finding",
+            "forecast",
+            "anomaly",
+            "evidence",
+            "claim",
+            "unavailable"
+          ]
+        },
+        "ref_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "label": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "detail": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "candidate_claim": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "status",
+        "verified"
+      ],
+      "properties": {
+        "claim_id": {
+          "type": "string"
+        },
+        "status": {
+          "description": "Always \"candidate\". No code path in the synthesis foundation promotes a claim, so no other value can have been produced legitimately.",
+          "type": "string",
+          "const": "candidate"
+        },
+        "verified": {
+          "description": "Always false. There is no verification path; a true here would be forged.",
+          "type": "boolean",
+          "const": false
+        },
+        "evidence_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "statement": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "conflict": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "conflict_id",
+        "kind",
+        "positions",
+        "unresolved"
+      ],
+      "properties": {
+        "conflict_id": {
+          "type": "string",
+          "pattern": "^cf-[0-9a-f]{12}$"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "definitional",
+            "numeric",
+            "scope",
+            "temporal",
+            "methodology",
+            "internal_external"
+          ]
+        },
+        "subject": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unresolved": {
+          "type": "boolean"
+        },
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "positions": {
+          "description": "Every competing position, kept whole. There is no aggregate, midpoint or winner field, because none is ever computed.",
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object"
+          }
+        },
+        "resolution": {
+          "description": "Always absent or null. A conflict is reported, not settled.",
+          "type": "null"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "item_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "assessment": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "limitation": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "code"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "subject": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "confidence",
+        "reasons",
+        "statistical_interval"
+      ],
+      "properties": {
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "explanations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "severe_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "statistical_interval": {
+          "description": "Always false. Confidence here is a qualitative judgement about evidence, never a probability.",
+          "type": "boolean",
+          "const": false
+        },
+        "basis": {
+          "type": "string"
+        }
+      }
+    },
+    "dimension_provenance": {
+      "type": "object",
+      "description": "Where one comparability dimension came from (ADR-0026). Only `stated`, `context` and `derived` may establish a dimension for compatibility; `asserted` is recorded for audit and reads as unstated. Source identity, tier, freshness and retrieval date are resolved from the cited evidence item, never carried here.",
+      "required": [
+        "dimension",
+        "basis"
+      ],
+      "properties": {
+        "dimension": {
+          "enum": [
+            "metric_definition",
+            "period",
+            "geography",
+            "currency",
+            "unit",
+            "scope",
+            "methodology"
+          ]
+        },
+        "value": {
+          "type": [
+            "string",
+            "number",
+            "null"
+          ]
+        },
+        "basis": {
+          "enum": [
+            "stated",
+            "context",
+            "derived",
+            "asserted"
+          ]
+        },
+        "evidence_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_excerpt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Verbatim source text the reading rests on. Checked for containment in the retrieved content; containment is proved, meaning is not."
+        },
+        "source_locator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "applicability": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "derivation": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
