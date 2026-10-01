@@ -30,14 +30,15 @@ Contents:
 - **Cause.** Either the plugin is not loaded in this session, or another plugin defines a command with the same
   name.
 - **Check.** Run `claude plugin list` to see whether `businessops` is installed. If you loaded a clone, check that you
-  started Claude Code with `claude --plugin-dir <path to the clone>`.
+  started Claude Code with `claude --plugin-dir <path to the clone>/dist/businessops`.
 - **Resolution.**
   - Load the plugin by either route in the `README.md` *Quick start*: the marketplace install, or `--plugin-dir` for
     one session.
   - For a name collision, use the plugin-qualified form, for example `/businessops:business-health`.
 - **Note.** The project's own recorded runs used `--plugin-dir`. The marketplace route uses the standard plugin
   commands, and this project has not separately recorded it.
-- **Escalate** if `claude plugin validate . --strict` passes on the clone but the commands still do not appear.
+- **Escalate** if `claude plugin validate dist/businessops --strict` passes on the clone but the commands still do not
+  appear.
 
 ### `/retrieval-slice` appears in the command list
 

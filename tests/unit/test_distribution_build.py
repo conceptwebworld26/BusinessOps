@@ -115,7 +115,8 @@ class TheDistributionPackage(unittest.TestCase):
         self.assertIn("not the generated file: .gitignore", problems)
 
     def test_the_packaged_manifests_name_the_one_businessops_repository(self):
-        """Single-repository architecture: the package's manifests are the source's, URLs included."""
+        """Single-repository architecture: the package's manifests are the source's, URLs included,
+        except the marketplace entry's `source` (BOPS-R18)."""
         import json
         url = "https://github.com/conceptwebworld26/BusinessOps"
         with open(os.path.join(self.out, ".claude-plugin", "plugin.json"), encoding="utf-8") as handle:
@@ -130,8 +131,27 @@ class TheDistributionPackage(unittest.TestCase):
         with open(os.path.join(self.out, ".claude-plugin", "marketplace.json"), encoding="utf-8") as handle:
             marketplace = json.load(handle)
         with open(os.path.join(REPO, ".claude-plugin", "marketplace.json"), encoding="utf-8") as handle:
-            self.assertEqual(marketplace, json.load(handle))
+            source = json.load(handle)
+        self.assertEqual([entry["source"] for entry in source["plugins"]], ["./dist/businessops"])
+        self.assertEqual([entry["source"] for entry in marketplace["plugins"]], ["./"])
+        for entry in source["plugins"]:
+            entry["source"] = "./"
+        self.assertEqual(marketplace, source)
         self.assertEqual([entry["homepage"] for entry in marketplace["plugins"]], [url])
+
+    def test_the_build_check_rejects_a_package_marketplace_entry_not_at_the_package_root(self):
+        """BOPS-R18: inside the package the plugin is the package root; `./dist/businessops` would not exist."""
+        copy = os.path.join(self.tmp, "source-check")
+        shutil.copytree(self.out, copy)
+        path = os.path.join(copy, ".claude-plugin", "marketplace.json")
+        with open(path, encoding="utf-8") as handle:
+            marketplace = json.load(handle)
+        marketplace["plugins"][0]["source"] = "./dist/businessops"
+        with open(path, "w", encoding="utf-8") as handle:
+            json.dump(marketplace, handle)
+        problems, _files = self.builder.check(copy)
+        self.assertTrue(any(p.startswith("marketplace entry source is not the package root") for p in problems),
+                        problems)
 
     def test_the_committed_package_is_exactly_a_fresh_build(self):
         """`dist/businessops/` is committed for review; it must never drift from its source.

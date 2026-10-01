@@ -71,8 +71,12 @@ class TestMarketplaceManifest(unittest.TestCase):
         self.assertEqual(entry["name"], plugin["name"])
         self.assertEqual(entry["version"], plugin["version"])
 
-    def test_source_points_at_repo_root(self):
-        self.assertEqual(self.marketplace["plugins"][0]["source"], "./")
+    def test_source_points_at_the_committed_package(self):
+        """BOPS-R18: adding this repository as a marketplace installs `dist/businessops/`, not the
+        development tree. The package's own marketplace entry points at its root (the builder sets it)."""
+        self.assertEqual(self.marketplace["plugins"][0]["source"], "./dist/businessops")
+        # `claude plugin validate` does not check that a relative source exists; this does.
+        self.assertTrue(os.path.isfile(os.path.join(REPO, "dist", "businessops", ".claude-plugin", "plugin.json")))
 
 
 class TestRepositoryLayout(unittest.TestCase):

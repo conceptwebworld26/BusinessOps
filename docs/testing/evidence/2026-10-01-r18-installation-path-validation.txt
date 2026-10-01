@@ -1,0 +1,70 @@
+BusinessOps M4 — BOPS-R18 installation-path fix: package and marketplace validation
+Captured: 2026-10-01 16:29:59 +0530 on native Windows with Git for Windows; 2.1.285 (Claude Code)
+Absolute paths are shown as <repo>. Source: working tree on top of commit 73fb29e.
+
+$ python scripts/build_distribution.py
+{
+  "package": "<repo>/dist/businessops",
+  "files": 189,
+  "bytes": 2651459,
+  "problems": []
+}
+exit status: 0
+
+$ claude plugin validate dist/businessops --strict
+Validating marketplace manifest: <repo>\dist\businessops\.claude-plugin\marketplace.json
+
+✔ Validation passed
+exit status: 0
+
+$ claude plugin validate dist/businessops/.claude-plugin/plugin.json --strict
+Validating plugin manifest: <repo>\dist\businessops\.claude-plugin\plugin.json
+
+✔ Validation passed
+exit status: 0
+
+$ claude plugin validate . --strict
+Validating marketplace manifest: <repo>\.claude-plugin\marketplace.json
+
+✔ Validation passed
+exit status: 0
+
+--- marketplace entry source ---
+repository root .claude-plugin/marketplace.json: ['./dist/businessops']
+dist/businessops/.claude-plugin/marketplace.json: ['./']
+Note: claude plugin validate does not check that a relative source exists (a copy pointing at ./dist/missing also
+passed); tests/unit/test_manifest.py asserts dist/businessops/.claude-plugin/plugin.json exists.
+
+--- package ---
+files: 189 | bytes: 2651459 | largest: 244323 assets/demo-data/northwind_sales.csv
+files over 262144 bytes: 0 | symlinks: 0 | __pycache__/.py[cod]: 0
+personal paths: 0 | BusinessIQ/businessiq: 0 | BusinessOps-Plugin: 0 | CLAUDE.md shipped: no
+changed against the committed package (73fb29e): dist/businessops/README.md 
+
+--- tests (python tests/run_tests.py <module>) ---
+unit.test_manifest                             ran 15 | failures 0 | errors 0 | skipped 0
+unit.test_distribution_build                   ran 16 | failures 0 | errors 0 | skipped 0
+unit.test_shipped_claude_md_references         ran 8 | failures 0 | errors 0 | skipped 0
+unit.test_m13_def04_static_guard               ran 17 | failures 0 | errors 0 | skipped 0
+unit.test_m13_def08_runtime_resolver           ran 26 | failures 0 | errors 0 | skipped 0
+negative.test_m13_approval_boundaries          ran 5 | failures 0 | errors 0 | skipped 0
+unit.test_m11_verification_server              ran 13 | failures 0 | errors 0 | skipped 0
+unit.test_m11_verifier_agent_boundary          ran 12 | failures 0 | errors 0 | skipped 7
+unit.test_command_registry                     ran 41 | failures 0 | errors 0 | skipped 0
+unit.test_m12b_connector_registry              ran 51 | failures 0 | errors 0 | skipped 0
+negative.test_m12b_connector_security          ran 78 | failures 0 | errors 0 | skipped 0
+unit.test_m13_def24_write_classifier           ran 49 | failures 6 | errors 1 | skipped 0
+unit.test_m13_eval_results                     ran 56 | failures 0 | errors 0 | skipped 0
+unit.test_m13_def24_write_classifier: the 6 failures and 1 error are the known native-Windows baseline (BOPS-M3 set minus test_17, fixed in M4A).
+
+--- MCP (throwaway copy dist/r18mcp, gitignored, deleted afterwards) ---
+The copy was taken before the last README wording edit; every runtime file in it equals the final package, and
+runtime files are unchanged in this milestone (only README.md differs from the committed package).
+$ claude --plugin-dir <repo>/dist/r18mcp mcp list   (run from the session scratchpad, outside the repository)
+plugin:businessops:bops-verifier: sh <repo>/dist/r18mcp/lib/bops_run.sh --verifier - ✔ Connected
+JSON-RPC over stdio (sh <copy>/lib/bops_run.sh --verifier, CLAUDE_PLUGIN_ROOT=<copy>):
+initialize: {'name': 'bops-verifier', 'version': '1.0.0'}; instructions published: False
+tools/list: [('recompute', {'title': 'Recompute a BusinessOps verification request', 'readOnlyHint': False, 'destructiveHint': False, 'openWorldHint': False})]
+tools/call recompute, malformed request_id: status failed, error_code request_id_invalid
+tools/call unknown tool: JSON-RPC error -32602 invalid params
+server exit status 0, stderr empty

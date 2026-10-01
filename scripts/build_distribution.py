@@ -17,6 +17,9 @@ Transformations, the only ones:
   manifest path that does not exist fails validation. Every other manifest field, `homepage` and
   `repository` included, is the source's: BusinessOps has one public repository, which holds both this
   source and the built package under `dist/businessops/`.
+- `.claude-plugin/marketplace.json`: the plugin entry's `source` becomes `./`. In this repository the
+  entry points at `./dist/businessops`, so `claude plugin marketplace add conceptwebworld26/BusinessOps`
+  installs only the package (BOPS-R18); inside the package the plugin is the package root itself.
 - Markdown files: a relative link to a file that is not shipped is rewritten to the same file in the
   development repository on GitHub, so documentation links keep working.
 
@@ -24,10 +27,10 @@ One file is generated rather than copied: a `.gitignore` at the package root, so
 when the plugin runs from that folder is never committed (BOPS-R16). It is repository hygiene only: no
 plugin component reads it.
 
-After building it checks the package and exits non-zero on any failure: a `${CLAUDE_PLUGIN_ROOT}` path
-that does not exist, a forbidden path, Python bytecode, a `.gitignore` other than the generated one, a file
-over 256 KiB, a binary file other than an image, a symlink, more than 512 files, a relative Markdown link
-that does not resolve, or a personal machine path. It prints a JSON summary on stdout. Standard library only.
+After building it checks the package and exits non-zero on any failure: a marketplace entry whose
+`source` is not the package root, a `${CLAUDE_PLUGIN_ROOT}` path that does not exist, a forbidden path,
+Python bytecode, a `.gitignore` other than the generated one, a file over 256 KiB, a binary file other
+than an image, a symlink, more than 512 files, a relative Markdown link that does not resolve, or a personal machine path. It prints a JSON summary on stdout. Standard library only.
 """
 
 import argparse
@@ -41,6 +44,9 @@ import sys
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 PLUGIN_NAME = "businessops"
 REPOSITORY_URL = "https://github.com/conceptwebworld26/BusinessOps"
+#: The package's marketplace entry `source`: the package root (BOPS-R18). This repository's entry is
+#: `./dist/businessops`.
+PACKAGE_PLUGIN_SOURCE = "./"
 #: The package's `.gitignore` (BOPS-R16), generated into the package root. Narrow on purpose: it names
 #: Python bytecode only, so it cannot hide a plugin file.
 DISTRIBUTION_GITIGNORE = (
@@ -128,6 +134,11 @@ def _transform(rel_path, data, shipped):
             if not experimental:
                 del manifest["experimental"]
         return (json.dumps(manifest, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
+    if rel_path == ".claude-plugin/marketplace.json":
+        marketplace = json.loads(data.decode("utf-8"))
+        for entry in marketplace["plugins"]:
+            entry["source"] = PACKAGE_PLUGIN_SOURCE
+        return (json.dumps(marketplace, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
     if rel_path.endswith(".md"):
         return _rewrite_links(data.decode("utf-8"), rel_path, shipped).encode("utf-8")
     return data
@@ -158,6 +169,13 @@ def check(out):
         for name in names:
             files.append(os.path.relpath(os.path.join(directory, name), out).replace(os.sep, "/"))
     shipped = set(files)
+    try:
+        with io.open(os.path.join(out, ".claude-plugin", "marketplace.json"), encoding="utf-8") as handle:
+            sources = [entry.get("source") for entry in json.load(handle)["plugins"]]
+    except (OSError, IOError, ValueError, KeyError, TypeError, AttributeError):
+        sources = None
+    if sources != [PACKAGE_PLUGIN_SOURCE]:
+        problems.append("marketplace entry source is not the package root: %r" % (sources,))
     if len(files) > MAX_FILES:
         problems.append("%d files, over %d" % (len(files), MAX_FILES))
     for rel in files:

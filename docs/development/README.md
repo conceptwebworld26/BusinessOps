@@ -144,3 +144,4 @@ Template: [`../templates/dev-record.md`](../templates/dev-record.md).
 | 2026-09-30 | BusinessOps M4A.1: remove shipped-plugin CLAUDE.md references (BOPS-R14; work done 2026-10-01) | [businessops m4a1 remove shipped claude md references](2026-09-30-businessops-m4a1-remove-shipped-claude-md-references.md) |
 | 2026-10-01 | BusinessOps M4: distribution repository preparation (package built and validated) | [businessops distribution repository preparation](2026-10-01-businessops-distribution-repository-preparation.md) |
 | 2026-10-01 | BusinessOps M4: single-repository distribution architecture (package committed under dist/businessops/; ADR-0057) | [businessops m4 single repository architecture](2026-10-01-businessops-m4-single-repository-architecture.md) |
+| 2026-10-01 | BusinessOps M4: BOPS-R18 installation-path fix (marketplace entry points at ./dist/businessops) | [businessops r18 installation path fix](2026-10-01-businessops-r18-installation-path-fix.md) |

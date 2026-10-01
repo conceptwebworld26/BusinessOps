@@ -265,19 +265,32 @@ Source: Anthropic's [plugin platform-support table](https://claude.com/docs/plug
 
 Check [Platform requirements](#platform-requirements) first.
 
-**Install from the GitHub marketplace:**
+**Where the plugin is.** The [BusinessOps repository](https://github.com/conceptwebworld26/BusinessOps) holds the
+plugin's source, tests, evaluations and development records. The installable plugin is the folder
+`dist/businessops/`, built from that source by `scripts/build_distribution.py`. The material outside that folder is
+there on purpose, so the plugin can be reviewed together with the code, tests and records it was built from. Every
+route below installs or loads `dist/businessops/`, not the whole repository.
+
+**From Anthropic's plugin directory.** BusinessOps' directory submission uses the plugin path `dist/businessops`, and
+the directory reads only that folder. When BusinessOps is listed there, add it from the directory; no command below
+is needed.
+
+**Install from the BusinessOps marketplace.** The repository is also a Claude Code marketplace named `businessops`.
+Its catalogue entry for the `businessops` plugin points at `./dist/businessops`, so only that folder is installed:
 
 ```bash
 claude plugin marketplace add conceptwebworld26/BusinessOps
 claude plugin install businessops@businessops
 ```
 
+The first command adds the marketplace and the second installs the plugin from it (`plugin@marketplace`).
+
 **Or load a local clone for one session:**
 
 ```bash
 git clone https://github.com/conceptwebworld26/BusinessOps.git
 cd BusinessOps
-claude --plugin-dir .
+claude --plugin-dir dist/businessops
 ```
 
 The project's own recorded runs used `--plugin-dir`. The marketplace install uses Claude Code's standard plugin
@@ -467,8 +480,11 @@ Full details: [`architecture.md`](https://github.com/conceptwebworld26/BusinessO
 - **Source data is immutable.** Normalisation happens on a derived working copy.
 
 ```bash
-python3 tests/run_tests.py          # full test suite: standard library only, offline, deterministic
-claude plugin validate . --strict   # manifest and component validation
+python3 tests/run_tests.py              # full test suite: standard library only, offline, deterministic
+python3 scripts/build_distribution.py   # rebuild the installable plugin into dist/businessops/
+claude plugin validate dist/businessops --strict                           # the package's marketplace manifest
+claude plugin validate dist/businessops/.claude-plugin/plugin.json --strict  # the package's plugin manifest
+claude plugin validate . --strict                                          # this repository's marketplace catalogue
 ```
 
 ## Support
