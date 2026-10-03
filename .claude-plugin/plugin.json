@@ -21,6 +21,8 @@
     "fp-and-a"
   ],
   "icon": "./.claude-plugin/icon.png",
+  "privacyPolicyUrl": "https://github.com/conceptwebworld26/BusinessOps/blob/main/PRIVACY.md",
+  "termsOfServiceUrl": "https://github.com/conceptwebworld26/BusinessOps/blob/main/EULA.md",
   "experimental": {
     "evals": "evals"
   }

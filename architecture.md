@@ -125,12 +125,16 @@ Verified against Claude Code 2.1.263 (ADR-0001; probe evidence in
   "license": "LicenseRef-BusinessOps-Proprietary",
   "keywords": ["business-intelligence", "analytics", "forecasting", "fp-and-a"],
   "icon": "./.claude-plugin/icon.png",
+  "privacyPolicyUrl": "https://github.com/conceptwebworld26/BusinessOps/blob/main/PRIVACY.md",
+  "termsOfServiceUrl": "https://github.com/conceptwebworld26/BusinessOps/blob/main/EULA.md",
   "experimental": { "evals": "evals" }
 }
 ```
 
-`icon` is a directory-listing field: Anthropic's directory reads it, Claude Code does not. The directory
-accepts only a square PNG or JPEG of 512 to 2048 px under 2 MB, not SVG or WebP, so `icon` names
+`icon`, `privacyPolicyUrl` and `termsOfServiceUrl` are directory-listing fields: Anthropic's directory reads
+them, Claude Code does not, and they belong only in `plugin.json`. The two URLs name `PRIVACY.md` and `EULA.md`
+in the public repository. The directory accepts only a square PNG or JPEG of 512 to 2048 px under 2 MB, not
+SVG or WebP, so `icon` names
 `.claude-plugin/icon.png`, a 512 × 512 PNG rendered from the design source `.claude-plugin/icon.svg`, which
 is not shipped. `claude plugin validate` checks neither the file nor its format, so the build's package
 check enforces the directory's rule.

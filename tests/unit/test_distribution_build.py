@@ -168,6 +168,25 @@ class TheDistributionPackage(unittest.TestCase):
         self.assertLess(len(data), 2 * 1000 * 1000)
         self.assertIsNone(self.builder._icon_problem(self.out, icon))
 
+    def test_the_manifests_carry_the_directory_legal_links(self):
+        """The directory fills its Privacy Policy and Terms of Service links from `plugin.json`. These listing
+        fields belong only there: in a marketplace entry `claude plugin validate` reports them as unknown."""
+        expected = {
+            "privacyPolicyUrl": "https://github.com/conceptwebworld26/BusinessOps/blob/main/PRIVACY.md",
+            "termsOfServiceUrl": "https://github.com/conceptwebworld26/BusinessOps/blob/main/EULA.md",
+        }
+        for label, root in (("source", REPO), ("package", self.out)):
+            with open(os.path.join(root, ".claude-plugin", "plugin.json"), encoding="utf-8") as handle:
+                manifest = json.load(handle)
+            with open(os.path.join(root, ".claude-plugin", "marketplace.json"), encoding="utf-8") as handle:
+                marketplace = json.load(handle)
+            for field, url in expected.items():
+                with self.subTest(manifest=label, field=field):
+                    self.assertEqual(manifest[field], url)
+                    self.assertTrue(all(field not in entry for entry in marketplace["plugins"]))
+        for name in ("PRIVACY.md", "EULA.md"):
+            self.assertIn(name, self.files)
+
     def test_the_svg_design_source_is_not_shipped(self):
         """`.claude-plugin/icon.svg` is the design the PNG is rendered from; the directory does not accept it."""
         self.assertTrue(os.path.isfile(os.path.join(REPO, ".claude-plugin", "icon.svg")))
