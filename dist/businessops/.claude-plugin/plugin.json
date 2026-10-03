@@ -19,5 +19,6 @@
     "financial-analysis",
     "decision-support",
     "fp-and-a"
-  ]
+  ],
+  "icon": "./.claude-plugin/icon.svg"
 }

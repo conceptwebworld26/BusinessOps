@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="title">
+  <title id="title">BusinessOps</title>
+  <rect width="512" height="512" rx="112" fill="#0F172A"/>
+  <rect x="96" y="300" width="52" height="108" rx="14" fill="#14B8A6"/>
+  <rect x="164" y="220" width="52" height="188" rx="14" fill="#14B8A6"/>
+  <path fill="#F8FAFC" fill-rule="evenodd" d="M232 118a14 14 0 0 1 14-14H312a72 72 0 0 1 0 144h24a80 80 0 0 1 0 160H246a14 14 0 0 1-14-14ZM288 160v60h16a30 30 0 0 0 0-60ZM288 276v76h32a38 38 0 0 0 0-76Z"/>
+</svg>

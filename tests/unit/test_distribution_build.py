@@ -153,6 +153,38 @@ class TheDistributionPackage(unittest.TestCase):
         self.assertTrue(any(p.startswith("marketplace entry source is not the package root") for p in problems),
                         problems)
 
+    def test_the_packaged_manifest_icon_is_shipped_at_its_path(self):
+        """The directory reads `icon` from the packaged `plugin.json` and needs the file it names."""
+        with open(os.path.join(self.out, ".claude-plugin", "plugin.json"), encoding="utf-8") as handle:
+            icon = json.load(handle)["icon"]
+        self.assertEqual(icon, "./.claude-plugin/icon.svg")
+        self.assertIn(icon[2:], self.files)
+
+    def test_the_icon_is_a_self_contained_square_svg(self):
+        import xml.etree.ElementTree as ET
+        path = os.path.join(self.out, ".claude-plugin", "icon.svg")
+        with open(path, encoding="utf-8") as handle:
+            text = handle.read()
+        root = ET.fromstring(text)
+        self.assertEqual(root.tag, "{http://www.w3.org/2000/svg}svg")
+        self.assertEqual(root.get("viewBox"), "0 0 512 512")
+        for element in root.iter():
+            with self.subTest(element=element.tag):
+                self.assertNotIn(element.tag.rsplit("}", 1)[-1], ("script", "image", "foreignObject", "style",
+                                                                   "animate", "set", "use", "a"))
+        # The SVG namespace is an identifier, not a resource; anything else that names a location is.
+        body = text.replace('xmlns="http://www.w3.org/2000/svg"', "", 1)
+        for marker in ("href", "url(", "http:", "https:", "@import", "<!ENTITY"):
+            self.assertNotIn(marker, body)
+        self.assertNotRegex(body, r"\son[a-z]+=")
+
+    def test_the_build_check_rejects_a_manifest_icon_that_is_not_in_the_package(self):
+        copy = os.path.join(self.tmp, "icon-check")
+        shutil.copytree(self.out, copy)
+        os.remove(os.path.join(copy, ".claude-plugin", "icon.svg"))
+        problems, _files = self.builder.check(copy)
+        self.assertIn("manifest icon is not an image file in the package: './.claude-plugin/icon.svg'", problems)
+
     def test_the_committed_package_is_exactly_a_fresh_build(self):
         """`dist/businessops/` is committed for review; it must never drift from its source.
 

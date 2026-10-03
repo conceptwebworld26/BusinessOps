@@ -28,7 +28,7 @@ when the plugin runs from that folder is never committed (BOPS-R16). It is repos
 plugin component reads it.
 
 After building it checks the package and exits non-zero on any failure: a marketplace entry whose
-`source` is not the package root, a `${CLAUDE_PLUGIN_ROOT}` path that does not exist, a forbidden path,
+`source` is not the package root, a manifest `icon` that is not an image file in the package, a `${CLAUDE_PLUGIN_ROOT}` path that does not exist, a forbidden path,
 Python bytecode, a `.gitignore` other than the generated one, a file over 256 KiB, a binary file other
 than an image, a symlink, more than 512 files, a relative Markdown link that does not resolve, or a personal machine path. It prints a JSON summary on stdout. Standard library only.
 """
@@ -62,6 +62,8 @@ SHIPPED_DIRS = ("agents", "commands", "config", "hooks", "lib", "reference", "sk
 SHIPPED_FILES = (
     ".claude-plugin/plugin.json",
     ".claude-plugin/marketplace.json",
+    # The directory-listing icon the manifest's `icon` names. Claude Code does not read it.
+    ".claude-plugin/icon.svg",
     ".mcp.json",
     "README.md",
     "LICENSE",
@@ -176,6 +178,17 @@ def check(out):
         sources = None
     if sources != [PACKAGE_PLUGIN_SOURCE]:
         problems.append("marketplace entry source is not the package root: %r" % (sources,))
+    try:
+        with io.open(os.path.join(out, ".claude-plugin", "plugin.json"), encoding="utf-8") as handle:
+            icon = json.load(handle).get("icon")
+    except (OSError, IOError, ValueError, AttributeError):
+        icon = None
+    # `claude plugin validate` does not check `icon`, so the package check does: the directory needs the file.
+    if icon is not None:
+        resolved = os.path.normpath(os.path.join(out, str(icon)))
+        if (not str(icon).startswith("./") or not str(icon).lower().endswith(IMAGE_EXTENSIONS)
+                or not resolved.startswith(os.path.normpath(out) + os.sep) or not os.path.isfile(resolved)):
+            problems.append("manifest icon is not an image file in the package: %r" % (icon,))
     if len(files) > MAX_FILES:
         problems.append("%d files, over %d" % (len(files), MAX_FILES))
     for rel in files:

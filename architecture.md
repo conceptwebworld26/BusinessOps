@@ -124,9 +124,14 @@ Verified against Claude Code 2.1.263 (ADR-0001; probe evidence in
   "repository": "https://github.com/conceptwebworld26/BusinessOps",
   "license": "LicenseRef-BusinessOps-Proprietary",
   "keywords": ["business-intelligence", "analytics", "forecasting", "fp-and-a"],
+  "icon": "./.claude-plugin/icon.svg",
   "experimental": { "evals": "evals" }
 }
 ```
+
+`icon` is a directory-listing field: Anthropic's directory reads it, Claude Code does not. It names
+`.claude-plugin/icon.svg`, a self-contained 512 × 512 SVG that the build ships. `claude plugin validate`
+does not check that the file exists, so the build's package check does.
 
 Every component key is omitted so the conventional directories auto-discover — `agents`
 included, and that one is not a style preference. Measured at Milestone 9-B: with
@@ -1549,7 +1554,7 @@ imports the package. The `bops-data-profiler` agent stays unbuilt (§D.1), and `
 
 ```
 BusinessOps/
-├── .claude-plugin/plugin.json · marketplace.json
+├── .claude-plugin/plugin.json · marketplace.json · icon.svg
 ├── .mcp.json                     Verified endpoints only; the local bops-verifier stdio server (M11)
 ├── .gitignore                    + .businessops/ and businessops-output/
 ├── CLAUDE.md · README.md · architecture.md · project_plan.md · CONNECTORS.md · LICENSE

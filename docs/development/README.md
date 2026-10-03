@@ -146,3 +146,4 @@ Template: [`../templates/dev-record.md`](../templates/dev-record.md).
 | 2026-10-01 | BusinessOps M4: single-repository distribution architecture (package committed under dist/businessops/; ADR-0057) | [businessops m4 single repository architecture](2026-10-01-businessops-m4-single-repository-architecture.md) |
 | 2026-10-01 | BusinessOps M4: BOPS-R18 installation-path fix (marketplace entry points at ./dist/businessops) | [businessops r18 installation path fix](2026-10-01-businessops-r18-installation-path-fix.md) |
 | 2026-10-01 | BusinessOps M4: ownership and support identity migration (Prakash Meghani - Krayons Global, krayonsglobal@gmail.com) | [businessops krayons global identity migration](2026-10-01-businessops-krayons-global-identity-migration.md) |
+| 2026-10-03 | BusinessOps M4: directory icon (`.claude-plugin/icon.svg`, manifest `icon`, shipped and build-checked) | [businessops directory icon](2026-10-03-businessops-directory-icon.md) |
