@@ -58,18 +58,18 @@ fi
 # --- Does one candidate satisfy the contract? Probed under -I so that no PYTHON* variable, user
 # --- site directory or working directory can affect the answer. Output is discarded: a candidate
 # --- may print anything, and only its exit status is trusted.
-# --- The candidate must emit this exact token. An exit status alone is not enough: a broken or
+# --- The candidate must emit this exact marker. An exit status alone is not enough: a broken or
 # --- hostile executable that exits 0 whatever it is given would pass a status-only check and then
-# --- be handed the engine. Requiring the token means the candidate really evaluated the version
+# --- be handed the engine. Requiring the marker means the candidate really evaluated the version
 # --- expression, so it is a Python that satisfies the contract and not merely something runnable.
-BOPS_PROBE_TOKEN=BOPS_RUNTIME_OK
+BOPS_PROBE_MARKER=BOPS_RUNTIME_OK
 
 bops_probe() {
     [ -f "$1" ] || return 1
     [ -x "$1" ] || return 1
     bops_probe_out=$("$1" -I -c 'import sys
-sys.stdout.write("'"$BOPS_PROBE_TOKEN"'" if sys.version_info[:2] >= ('"$BOPS_MIN_MAJOR"', '"$BOPS_MIN_MINOR"') else "unsupported")' 2>/dev/null) || return 1
-    [ "$bops_probe_out" = "$BOPS_PROBE_TOKEN" ] || return 1
+sys.stdout.write("'"$BOPS_PROBE_MARKER"'" if sys.version_info[:2] >= ('"$BOPS_MIN_MAJOR"', '"$BOPS_MIN_MINOR"') else "unsupported")' 2>/dev/null) || return 1
+    [ "$bops_probe_out" = "$BOPS_PROBE_MARKER" ] || return 1
     return 0
 }
 

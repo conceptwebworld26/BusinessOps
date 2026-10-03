@@ -182,8 +182,8 @@ class TheSecurityContract(unittest.TestCase):
                 self.assertIn('"$@"', line)
 
     def test_the_probe_demands_a_token_and_not_merely_an_exit_status(self):
-        self.assertIn("BOPS_PROBE_TOKEN=BOPS_RUNTIME_OK", self.code)
-        self.assertIn('[ "$bops_probe_out" = "$BOPS_PROBE_TOKEN" ] || return 1', self.code)
+        self.assertIn("BOPS_PROBE_MARKER=BOPS_RUNTIME_OK", self.code)
+        self.assertIn('[ "$bops_probe_out" = "$BOPS_PROBE_MARKER" ] || return 1', self.code)
         self.assertIn("-I -c", self.code)
 
     def test_the_probe_requires_a_regular_executable_file(self):

@@ -20,7 +20,7 @@
     "decision-support",
     "fp-and-a"
   ],
-  "icon": "./.claude-plugin/icon.svg",
+  "icon": "./.claude-plugin/icon.png",
   "experimental": {
     "evals": "evals"
   }

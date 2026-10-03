@@ -28,9 +28,12 @@ when the plugin runs from that folder is never committed (BOPS-R16). It is repos
 plugin component reads it.
 
 After building it checks the package and exits non-zero on any failure: a marketplace entry whose
-`source` is not the package root, a manifest `icon` that is not an image file in the package, a `${CLAUDE_PLUGIN_ROOT}` path that does not exist, a forbidden path,
+`source` is not the package root, a manifest `icon` that is not a square 512-2048 px PNG or JPEG under 2 MB
+in the package, a `${CLAUDE_PLUGIN_ROOT}` path that does not exist, a forbidden path,
 Python bytecode, a `.gitignore` other than the generated one, a file over 256 KiB, a binary file other
-than an image, a symlink, more than 512 files, a relative Markdown link that does not resolve, or a personal machine path. It prints a JSON summary on stdout. Standard library only.
+than an image, a symlink, more than 512 files, a relative Markdown link that does not resolve, a personal
+machine path, or a reference to a credential-named variable such as `$GITHUB_TOKEN`. It prints a JSON
+summary on stdout. Standard library only.
 """
 
 import argparse
@@ -39,6 +42,7 @@ import json
 import os
 import re
 import shutil
+import struct
 import sys
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
@@ -62,8 +66,9 @@ SHIPPED_DIRS = ("agents", "commands", "config", "hooks", "lib", "reference", "sk
 SHIPPED_FILES = (
     ".claude-plugin/plugin.json",
     ".claude-plugin/marketplace.json",
-    # The directory-listing icon the manifest's `icon` names. Claude Code does not read it.
-    ".claude-plugin/icon.svg",
+    # The directory-listing icon the manifest's `icon` names, a 512 px PNG rendered from the design source
+    # `.claude-plugin/icon.svg`, which is not shipped: the directory does not accept SVG. Claude Code reads neither.
+    ".claude-plugin/icon.png",
     ".mcp.json",
     "README.md",
     "LICENSE",
@@ -86,6 +91,17 @@ BYTECODE = re.compile(r"(^|/)__pycache__/|\.py[cod]$")
 MAX_FILES = 512
 MAX_FILE_BYTES = 256 * 1024
 IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg")
+#: The directory's listing-icon rule: a square PNG or JPEG, 512 to 2048 px a side, under 2 MB.
+ICON_EXTENSIONS = (".png", ".jpg", ".jpeg")
+ICON_MIN_PX, ICON_MAX_PX = 512, 2048
+ICON_MAX_BYTES = 2 * 1000 * 1000
+#: JPEG start-of-frame markers, which carry the image size (DHT, JPG and DAC are excluded).
+JPEG_FRAME_MARKERS = frozenset(range(0xC0, 0xD0)) - {0xC4, 0xC8, 0xCC}
+#: A shell or template reference to a credential-named variable, such as `$GITHUB_TOKEN`. The directory
+#: holds a plugin that reads a credential from the user's environment; BusinessOps never does, so none ships.
+#: `${user_config.KEY}`, the directory's recommended way to ask for a credential, does not match.
+CREDENTIAL_VARIABLE = re.compile(
+    r"\$\{?[A-Za-z0-9_]*(TOKEN|SECRET|PASSWORD|PASSWD|API_?KEY|CREDENTIALS?)[A-Za-z0-9_]*\}?", re.IGNORECASE)
 PERSONAL_PATH = re.compile(r"(/mnt/[a-z]/Prakash|[A-Za-z]:[\\/]+Prakash|Users[\\/]+Prakash)")
 PLUGIN_ROOT_REF = re.compile(r"\$\{CLAUDE_PLUGIN_ROOT\}/([A-Za-z0-9_./-]+)")
 MD_LINK = re.compile(r"(\]\()([^)\s#]+)((?:#[^)\s]*)?\))")
@@ -161,6 +177,43 @@ def _prepare(out):
     shutil.rmtree(out)
 
 
+def _image_size(data):
+    """(width, height) of a PNG or baseline/progressive JPEG, or None if `data` is neither."""
+    if data[:8] == b"\x89PNG\r\n\x1a\n" and data[12:16] == b"IHDR":
+        return struct.unpack(">II", data[16:24])
+    if data[:2] == b"\xff\xd8":
+        pos = 2
+        while pos + 9 < len(data) and data[pos] == 0xFF:
+            marker, length = data[pos + 1], struct.unpack(">H", data[pos + 2:pos + 4])[0]
+            if marker in JPEG_FRAME_MARKERS:
+                height, width = struct.unpack(">HH", data[pos + 5:pos + 9])
+                return width, height
+            pos += 2 + length
+    return None
+
+
+def _icon_problem(out, icon):
+    """Why the manifest `icon` would not satisfy the directory, or None when it does."""
+    icon = str(icon)
+    resolved = os.path.normpath(os.path.join(out, icon))
+    if not icon.startswith("./") or not resolved.startswith(os.path.normpath(out) + os.sep):
+        return "not a ./ path inside the package"
+    if not icon.lower().endswith(ICON_EXTENSIONS):
+        return "not a PNG or JPEG (the directory does not accept SVG or WebP)"
+    if not os.path.isfile(resolved):
+        return "file not in the package"
+    with io.open(resolved, "rb") as handle:
+        data = handle.read()
+    size = _image_size(data)
+    if size is None:
+        return "not a readable PNG or JPEG"
+    if size[0] != size[1] or not ICON_MIN_PX <= size[0] <= ICON_MAX_PX:
+        return "%dx%d, not square between %d and %d px" % (size[0], size[1], ICON_MIN_PX, ICON_MAX_PX)
+    if len(data) >= ICON_MAX_BYTES:
+        return "%d bytes, not under 2 MB" % len(data)
+    return None
+
+
 def check(out):
     """Every problem found in the package at `out`; an empty list means it passes."""
     problems, files = [], []
@@ -183,12 +236,11 @@ def check(out):
             icon = json.load(handle).get("icon")
     except (OSError, IOError, ValueError, AttributeError):
         icon = None
-    # `claude plugin validate` does not check `icon`, so the package check does: the directory needs the file.
+    # `claude plugin validate` does not check `icon`, so the package check does, to the directory's rule.
     if icon is not None:
-        resolved = os.path.normpath(os.path.join(out, str(icon)))
-        if (not str(icon).startswith("./") or not str(icon).lower().endswith(IMAGE_EXTENSIONS)
-                or not resolved.startswith(os.path.normpath(out) + os.sep) or not os.path.isfile(resolved)):
-            problems.append("manifest icon is not an image file in the package: %r" % (icon,))
+        problem = _icon_problem(out, icon)
+        if problem:
+            problems.append("manifest icon %r: %s" % (icon, problem))
     if len(files) > MAX_FILES:
         problems.append("%d files, over %d" % (len(files), MAX_FILES))
     for rel in files:
@@ -214,6 +266,9 @@ def check(out):
             problems.append("binary file: %s" % rel)
         if PERSONAL_PATH.search(text):
             problems.append("personal machine path: %s" % rel)
+        if CREDENTIAL_VARIABLE.search(text):
+            problems.append("credential-named variable reference: %s (%s)"
+                            % (rel, CREDENTIAL_VARIABLE.search(text).group(0)))
         for ref in PLUGIN_ROOT_REF.findall(text):
             ref = ref.rstrip(".")
             if not os.path.exists(os.path.join(out, ref)):

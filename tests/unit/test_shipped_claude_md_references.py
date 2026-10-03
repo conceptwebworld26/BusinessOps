@@ -62,7 +62,9 @@ class TheShippedPackage(unittest.TestCase):
         for rel, path in sorted(self.files.items()):
             if rel.split("/")[0] in INSTRUCTION_AREAS or rel in USER_DOCUMENTS:
                 with self.subTest(path=rel):
-                    self.assertNotIn("CLAUDE.md", _read(path))
+                    # Bytes, not text: `.claude-plugin/` also holds the listing icon, a PNG.
+                    with open(path, "rb") as handle:
+                        self.assertNotIn(b"CLAUDE.md", handle.read())
 
     def test_no_command_or_skill_tells_claude_to_read_claude_md(self):
         for rel, path in sorted(self.files.items()):

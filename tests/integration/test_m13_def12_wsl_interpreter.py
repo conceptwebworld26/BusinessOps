@@ -199,7 +199,7 @@ class OnWslTheNativeInterpreterWins(ResolverCase):
         self.assertIs(report["isolated"], True)
         with open(RESOLVER, encoding="utf-8") as handle:
             source = handle.read()
-        self.assertIn("BOPS_PROBE_TOKEN=BOPS_RUNTIME_OK", source)
+        self.assertIn("BOPS_PROBE_MARKER=BOPS_RUNTIME_OK", source)
         self.assertIn(" -I ", source)
 
 

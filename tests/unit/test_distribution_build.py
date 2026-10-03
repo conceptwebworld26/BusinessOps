@@ -13,6 +13,7 @@ import tempfile
 import unittest
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+PNG_SIGNATURE = bytes.fromhex("89504e470d0a1a0a")
 
 
 def _builder():
@@ -99,8 +100,8 @@ class TheDistributionPackage(unittest.TestCase):
             if rel == ".gitignore":
                 continue
             with self.subTest(path=rel):
-                with open(os.path.join(self.out, rel), encoding="utf-8") as handle:
-                    self.assertNotIn(".gitignore", handle.read())
+                with open(os.path.join(self.out, rel), "rb") as handle:
+                    self.assertNotIn(b".gitignore", handle.read())
 
     def test_the_build_check_rejects_python_bytecode_and_a_foreign_gitignore(self):
         copy = os.path.join(self.tmp, "bytecode-check")
@@ -153,37 +154,70 @@ class TheDistributionPackage(unittest.TestCase):
         self.assertTrue(any(p.startswith("marketplace entry source is not the package root") for p in problems),
                         problems)
 
-    def test_the_packaged_manifest_icon_is_shipped_at_its_path(self):
-        """The directory reads `icon` from the packaged `plugin.json` and needs the file it names."""
+    def test_the_packaged_manifest_icon_is_a_shipped_png(self):
+        """The directory reads `icon` from the packaged `plugin.json`, needs the file it names, and accepts
+        only a square PNG or JPEG of 512 to 2048 px under 2 MB: SVG and WebP are refused."""
         with open(os.path.join(self.out, ".claude-plugin", "plugin.json"), encoding="utf-8") as handle:
             icon = json.load(handle)["icon"]
-        self.assertEqual(icon, "./.claude-plugin/icon.svg")
-        self.assertIn(icon[2:], self.files)
+        self.assertEqual(icon, "./.claude-plugin/icon.png")
+        self.assertIn(".claude-plugin/icon.png", self.files)
+        with open(os.path.join(self.out, ".claude-plugin", "icon.png"), "rb") as handle:
+            data = handle.read()
+        self.assertEqual(data[:8], PNG_SIGNATURE)
+        self.assertEqual(self.builder._image_size(data), (512, 512))
+        self.assertLess(len(data), 2 * 1000 * 1000)
+        self.assertIsNone(self.builder._icon_problem(self.out, icon))
 
-    def test_the_icon_is_a_self_contained_square_svg(self):
-        import xml.etree.ElementTree as ET
-        path = os.path.join(self.out, ".claude-plugin", "icon.svg")
-        with open(path, encoding="utf-8") as handle:
-            text = handle.read()
-        root = ET.fromstring(text)
-        self.assertEqual(root.tag, "{http://www.w3.org/2000/svg}svg")
-        self.assertEqual(root.get("viewBox"), "0 0 512 512")
-        for element in root.iter():
-            with self.subTest(element=element.tag):
-                self.assertNotIn(element.tag.rsplit("}", 1)[-1], ("script", "image", "foreignObject", "style",
-                                                                   "animate", "set", "use", "a"))
-        # The SVG namespace is an identifier, not a resource; anything else that names a location is.
-        body = text.replace('xmlns="http://www.w3.org/2000/svg"', "", 1)
-        for marker in ("href", "url(", "http:", "https:", "@import", "<!ENTITY"):
-            self.assertNotIn(marker, body)
-        self.assertNotRegex(body, r"\son[a-z]+=")
+    def test_the_svg_design_source_is_not_shipped(self):
+        """`.claude-plugin/icon.svg` is the design the PNG is rendered from; the directory does not accept it."""
+        self.assertTrue(os.path.isfile(os.path.join(REPO, ".claude-plugin", "icon.svg")))
+        self.assertFalse(any(rel.endswith(".svg") for rel in self.files))
 
-    def test_the_build_check_rejects_a_manifest_icon_that_is_not_in_the_package(self):
+    def test_the_build_check_rejects_an_icon_the_directory_would_not_accept(self):
+        import struct
+        import zlib
+
+        def png(width, height):
+            def chunk(kind, body):
+                return struct.pack(">I", len(body)) + kind + body + struct.pack(">I", zlib.crc32(kind + body))
+            return (PNG_SIGNATURE + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0))
+                    + chunk(b"IEND", b""))
+
         copy = os.path.join(self.tmp, "icon-check")
         shutil.copytree(self.out, copy)
-        os.remove(os.path.join(copy, ".claude-plugin", "icon.svg"))
-        problems, _files = self.builder.check(copy)
-        self.assertIn("manifest icon is not an image file in the package: './.claude-plugin/icon.svg'", problems)
+        manifest = os.path.join(copy, ".claude-plugin", "plugin.json")
+        with open(manifest, encoding="utf-8") as handle:
+            original = json.load(handle)
+        cases = (
+            ("./.claude-plugin/icon.svg", None, "not a PNG or JPEG"),
+            ("./.claude-plugin/missing.png", None, "file not in the package"),
+            ("./.claude-plugin/small.png", png(256, 256), "not square between 512 and 2048 px"),
+            ("./.claude-plugin/wide.png", png(1024, 512), "not square between 512 and 2048 px"),
+            ("./.claude-plugin/fake.png", b"not an image", "not a readable PNG or JPEG"),
+            (".claude-plugin/icon.png", None, "not a ./ path inside the package"),
+        )
+        for icon, data, reason in cases:
+            with self.subTest(icon=icon):
+                if data is not None:
+                    with open(os.path.join(copy, icon[2:]), "wb") as handle:
+                        handle.write(data)
+                with open(manifest, "w", encoding="utf-8") as handle:
+                    json.dump(dict(original, icon=icon), handle)
+                problems, _files = self.builder.check(copy)
+                self.assertTrue(any(p.startswith("manifest icon %r: " % icon) and reason in p for p in problems),
+                                problems)
+
+    def test_no_shipped_file_references_a_credential_named_variable(self):
+        """The directory holds a plugin that reads a credential such as `$GITHUB_TOKEN` from the user's
+        environment. BusinessOps reads none, and nothing shipped may look as if it does."""
+        self.assertFalse([p for p in self.summary["problems"] if p.startswith("credential-named")])
+        for sample in ("$GITHUB_TOKEN", "${API_KEY}", "$BOPS_PROBE_TOKEN", "${OPENAI_API_KEY}"):
+            with self.subTest(sample=sample):
+                self.assertIsNotNone(self.builder.CREDENTIAL_VARIABLE.search(sample))
+        for sample in ("${CLAUDE_PLUGIN_ROOT}/lib/bops_run.sh", "$BOPS_PROBE_MARKER", "$bops_probe_out",
+                       "${user_config.api_token}"):
+            with self.subTest(sample=sample):
+                self.assertIsNone(self.builder.CREDENTIAL_VARIABLE.search(sample))
 
     def test_the_committed_package_is_exactly_a_fresh_build(self):
         """`dist/businessops/` is committed for review; it must never drift from its source.
