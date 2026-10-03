@@ -219,6 +219,51 @@ class TheDistributionPackage(unittest.TestCase):
             with self.subTest(sample=sample):
                 self.assertIsNone(self.builder.CREDENTIAL_VARIABLE.search(sample))
 
+    def test_the_readme_discloses_every_environment_value_the_shipped_code_reads(self):
+        """The directory holds a plugin that appears to read a credential from the user's machine. BusinessOps
+        reads none; the README lists exactly what it does read, and this keeps that list complete."""
+        import re
+        constants, reads = {}, set()
+        sources = {}
+        for rel in self.files:
+            if rel.endswith((".py", ".sh")):
+                with open(os.path.join(self.out, rel), encoding="utf-8") as handle:
+                    sources[rel] = handle.read()
+        for text in sources.values():
+            constants.update(re.findall(r'^([A-Z][A-Z0-9_]*)\s*=\s*"([A-Z][A-Z0-9_]*)"', text, re.M))
+        for rel, text in sources.items():
+            if rel.endswith(".py"):
+                for arg in re.findall(r"os\.(?:environ\.get|getenv)\(\s*([^,)]+)", text):
+                    arg = arg.strip().split(".")[-1].strip("\"'")
+                    reads.add(constants.get(arg, arg))
+                self.assertNotRegex(text, r"os\.environ\[", rel)
+            else:
+                # Names the script assigns itself (at a statement start or in a `case` arm), loops over or reads
+                # into. An example inside a message, such as `BOPS_PYTHON=/usr/bin/python3`, is not an assignment.
+                local = set(re.findall(r"(?:^\s*|\)\s+)([A-Za-z_][A-Za-z0-9_]*)=", text, re.M))
+                local.update(re.findall(r"\b(?:for|read(?:\s+-r)?)\s+([A-Za-z_][A-Za-z0-9_]*)", text))
+                for name in re.findall(r"\$\{?([A-Za-z_][A-Za-z0-9_]*)", text):
+                    if name not in local and name != "CLAUDE_PLUGIN_ROOT":
+                        reads.add(name)
+        self.assertEqual(reads, {"BOPS_VERIFICATION_DIR", "BOPS_GUARD_ROOT", "CLAUDE_CODE_SESSION_ID",
+                                 "BOPS_PYTHON", "PATH"})
+        with open(os.path.join(self.out, "README.md"), encoding="utf-8") as handle:
+            readme = handle.read()
+        for name in sorted(reads):
+            with self.subTest(variable=name):
+                self.assertIn("`%s`" % name, readme)
+
+    def test_the_account_lookup_reads_only_the_home_directory(self):
+        """`pwd` is the operating system's account record; BusinessOps takes the home folder from it and nothing
+        else, so a command that sets `HOME` cannot move the write-approval store (ADR-0051)."""
+        import re
+        uses = []
+        for rel in self.files:
+            if rel.endswith(".py"):
+                with open(os.path.join(self.out, rel), encoding="utf-8") as handle:
+                    uses += [(rel, use) for use in re.findall(r"\bpwd\.[A-Za-z_().]+", handle.read())]
+        self.assertEqual(uses, [("lib/python/bops/writeguard/policy.py", "pwd.getpwuid(os.getuid()).pw_dir")])
+
     def test_the_committed_package_is_exactly_a_fresh_build(self):
         """`dist/businessops/` is committed for review; it must never drift from its source.
 

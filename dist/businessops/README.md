@@ -169,6 +169,18 @@ Excel files are read through four tiers, best available first:
   never followed, and they can never raise a disclosure tier.
 - **No secrets are stored.** BusinessOps stores no credentials. Authentication belongs to MCP servers and their own
   sign-in flows.
+- **What it reads from your machine, besides your data files.** BusinessOps reads no credential, token, key file,
+  credential store or browser data, and asks you for none. It reads only:
+  - your home folder's location, from the operating system's account record (on macOS and Linux, the home-directory
+    field of Python's `pwd` lookup, and nothing else from it), so the write-approval store in
+    `~/.claude/businessops/guard/` cannot be moved by a command that changes `HOME`;
+  - `CLAUDE_CODE_SESSION_ID`, Claude Code's session identifier, which binds each write approval to the session it
+    was granted in (see [PRIVACY.md](PRIVACY.md));
+  - `PATH`, to find Python, and, only if you set them, `BOPS_PYTHON` (the interpreter to use), `BOPS_GUARD_ROOT`
+    and `BOPS_VERIFICATION_DIR` (folder overrides).
+
+  None of these values is sent anywhere. The engine makes no network connection of its own; the one download, the
+  optional `openpyxl` reader, happens only with your consent and sends none of them ([PRIVACY.md](PRIVACY.md)).
 
 These are enforced boundaries with recorded limits (see [Limitations](#limitations)). They are not a guarantee.
 
